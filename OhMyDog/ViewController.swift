@@ -170,7 +170,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     func getParent(_ nodeFound: SCNNode?) -> SCNNode? {
         if let node = nodeFound {
-            if let parent = node.parent {
+            if node.name == nodeName {
+                return node
+            } else if let parent = node.parent {
                 return getParent(parent)
             }
         }
