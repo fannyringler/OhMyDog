@@ -14,6 +14,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var nodeModel:SCNNode!
     var nodeName = "Armature"
+    var sceneLight : SCNLight!
     var modelScene = SCNScene()
     
     var focusSquare = FocusSquare()
@@ -41,6 +42,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
+        sceneView.autoenablesDefaultLighting = false
         
         // Create a new scene
         //let scene = SCNScene(named: "art.scnassets/struct.dae")!
@@ -48,6 +50,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        sceneLight = SCNLight()
+        sceneLight.type = .omni
+        
+        let lightNode = SCNNode()
+        lightNode.light = sceneLight
+        lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
+        
+        sceneView.scene.rootNode.addChildNode(lightNode)
         
         modelScene = SCNScene(named: "art.scnassets/struct.dae")!
         
@@ -167,6 +178,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
+            sceneLight.intensity = estimate.ambientIntensity
+        }
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
