@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var nodeName = "Armature"
     var sceneLight : SCNLight!
     var modelScene = SCNScene()
+    var dogPosition : SCNVector3!
     
     var focusSquare = FocusSquare()
     
@@ -60,7 +61,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
-        modelScene = SCNScene(named: "art.scnassets/shibaWaitStandUp.dae")!
+        modelScene = SCNScene(named: "art.scnassets/shibaWouf.dae")!
         
         nodeModel = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
     }
@@ -195,6 +196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 modelClone.position = SCNVector3Zero
                 // Add model as a child of the node
                 node.addChildNode(modelClone)
+                self.dogPosition = SCNVector3Make(anchor.transform.columns.3.x,anchor.transform.columns.3.y,anchor.transform.columns.3.z)
             }
         }
     }
