@@ -60,7 +60,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
-        modelScene = SCNScene(named: "art.scnassets/struct.dae")!
+        modelScene = SCNScene(named: "art.scnassets/shibaWaitStandUp.dae")!
         
         nodeModel = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
     }
