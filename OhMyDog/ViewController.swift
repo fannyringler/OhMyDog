@@ -18,6 +18,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var modelScene = SCNScene()
     var dogPosition : SCNVector3!
     var dogHere = false
+    var dog:SCNNode!
+    var animations = [String: CAAnimation]()
+    var walk = false
+    var destination:SCNVector3!
+    var timer = Timer()
     
     var focusSquare = FocusSquare()
     
@@ -43,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene.rootNode.addChildNode(focusSquare)
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = false
         sceneView.autoenablesDefaultLighting = false
         
         // Create a new scene
@@ -53,12 +58,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         
+        loadAnimations()
+        
         sceneLight = SCNLight()
         sceneLight.type = .omni
         
         let lightNode = SCNNode()
         lightNode.light = sceneLight
         lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
+        
+        dogHere = false
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -109,17 +118,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let y = from.y - to.y
         return sqrtf( (x * x) + (y * y))
     }
-
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
@@ -146,6 +144,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if let node = getParent(hit.node) {
                 node.removeFromParentNode()
                 dogHere = false
+                dog = nil
                 return
             }
         }
@@ -153,7 +152,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sceneView.hitTest(screenCenter, types: .featurePoint)
         if !dogHere {
             if let hit = hitResultsFeaturePoints.first {
-                dogHere = true
                 // Get a transformation matrix with the euler angle of the camera
                 let rotate = simd_float4x4(SCNMatrix4MakeRotation(sceneView.session.currentFrame!.camera.eulerAngles.y, 0, 1, 0))
                 var finalTransform:simd_float4x4
@@ -169,6 +167,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 }
                 // Use the resulting matrix to position the anchor
                 sceneView.session.add(anchor: ARAnchor(transform: finalTransform))
+                dogHere = true
+            }
+        } else {
+            if let hit = hitResultsFeaturePoints.first {
+                // hit.localTransform ou hit.worldTransform
+                destination  = SCNVector3 (hit.worldTransform.translation.x, hit.worldTransform.translation.y, hit.worldTransform.translation.z)
+                modelScene = SCNScene(named: "art.scnassets/shibaWalk.dae")!
+                if dog != nil {
+                    //playAnimation(key: "walk")
+                    //dog = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
+                    walk = true
+                    //dog.position = position
+                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
+                    
+                }
             }
         }
     }
@@ -195,10 +208,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 self.updateFocusSquare()
             }
         }
-
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if dog == nil  {
+            dog = node
+        }
         if !anchor.isKind(of: ARPlaneAnchor.self) {
             DispatchQueue.main.async {
                 let modelClone = self.nodeModel.clone()
@@ -300,5 +315,73 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    func loadAnimations () {
+        // Load all the DAE animations
+        loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk", animationIdentifier: "<untitled animation>")
+    }
+    
+    func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
+        let sceneURL = Bundle.main.url(forResource: sceneName, withExtension: "dae")
+        let sceneSource = SCNSceneSource(url: sceneURL!, options: nil)
+        
+        if let animationObject = sceneSource?.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) {
+            // The animation will only play once
+            animationObject.repeatCount = 1
+            // To create smooth transitions between animations
+            animationObject.fadeInDuration = CGFloat(1)
+            animationObject.fadeOutDuration = CGFloat(0.5)
+            
+            // Store the animation for later use
+            animations[withKey] = animationObject
+        }
+    }
+    
+    func playAnimation(key: String) {
+        // Add the animation to start playing it right away
+        sceneView.scene.rootNode.addAnimation(animations[key]!, forKey: key)
+    }
+    
+    func stopAnimation(key: String) {
+        // Stop the animation with a smooth transition
+        sceneView.scene.rootNode.removeAnimation(forKey: key, blendOutDuration: CGFloat(0.5))
+    }
+    
+    @objc func move(){
+        if walk && destination != nil && dog != nil {
+            var indexX = dog.position.x
+            var smallerX = destination.x < dogPosition.x
+            if smallerX {
+                if destination.x < indexX {
+                    indexX -= 0.1
+                }
+            } else {
+                if destination.x > indexX {
+                    indexX += 0.1
+                }
+            }
+            var indexY = dog.position.y
+            var smallerY = destination.y < dogPosition.y
+            if smallerY {
+                if destination.y < indexY {
+                    indexY -= 0.1
+                }
+            } else {
+                if destination.y > indexY {
+                    indexY += 0.1
+                }
+            }
+            dog.position = SCNVector3Make(indexX, indexY, dog.position.z)
+            if (smallerX && smallerY && destination.x > dog.position.x) || (!smallerX && !smallerY && destination.x < dog.position.x){
+                walk = false
+                timer.invalidate()
+                dogPosition = dog.position
+            }
+            
+        }
+    }
+    
+    func moveSlowy(){
+        
+    }
 
 }
