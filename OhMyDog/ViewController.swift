@@ -188,8 +188,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
             sceneLight.intensity = estimate.ambientIntensity
         }
-        DispatchQueue.main.async {
-            self.updateFocusSquare()
+        if dogHere {
+            self.focusSquare.hide()
+        } else {
+            DispatchQueue.main.async {
+                self.updateFocusSquare()
+            }
         }
 
     }
