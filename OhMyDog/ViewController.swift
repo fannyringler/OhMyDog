@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var sceneLight : SCNLight!
     var modelScene = SCNScene()
     var dogPosition : SCNVector3!
+    var dogHere = false
     
     var focusSquare = FocusSquare()
     
@@ -144,28 +145,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let hit = hitResults.first {
             if let node = getParent(hit.node) {
                 node.removeFromParentNode()
+                dogHere = false
                 return
             }
         }
         let hitResultsFeaturePoints: [ARHitTestResult] =
             sceneView.hitTest(screenCenter, types: .featurePoint)
-        if let hit = hitResultsFeaturePoints.first {
-            
-            // Get a transformation matrix with the euler angle of the camera
-            let rotate = simd_float4x4(SCNMatrix4MakeRotation(sceneView.session.currentFrame!.camera.eulerAngles.y, 0, 1, 0))
-            var finalTransform:simd_float4x4
-            let hitTest = sceneView.hitTest(screenCenter, types: .existingPlane).filter { (result) -> Bool in
-                return (result.anchor as? ARPlaneAnchor)?.alignment == ARPlaneAnchor.Alignment.vertical
-                }.first
-            if (hitTest != nil) {
-                let verticaltransform = smartHitTest(screenCenter)
-                finalTransform = (verticaltransform?.worldTransform)!
-            }else {
-                // Combine both transformation matrices
-                finalTransform = simd_mul(hit.worldTransform,rotate)
+        if !dogHere {
+            if let hit = hitResultsFeaturePoints.first {
+                dogHere = true
+                // Get a transformation matrix with the euler angle of the camera
+                let rotate = simd_float4x4(SCNMatrix4MakeRotation(sceneView.session.currentFrame!.camera.eulerAngles.y, 0, 1, 0))
+                var finalTransform:simd_float4x4
+                let hitTest = sceneView.hitTest(screenCenter, types: .existingPlane).filter { (result) -> Bool in
+                    return (result.anchor as? ARPlaneAnchor)?.alignment == ARPlaneAnchor.Alignment.vertical
+                    }.first
+                if (hitTest != nil) {
+                    let verticaltransform = smartHitTest(screenCenter)
+                    finalTransform = (verticaltransform?.worldTransform)!
+                }else {
+                    // Combine both transformation matrices
+                    finalTransform = simd_mul(hit.worldTransform,rotate)
+                }
+                // Use the resulting matrix to position the anchor
+                sceneView.session.add(anchor: ARAnchor(transform: finalTransform))
             }
-            // Use the resulting matrix to position the anchor
-            sceneView.session.add(anchor: ARAnchor(transform: finalTransform))
         }
     }
         
@@ -187,6 +191,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
+
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
