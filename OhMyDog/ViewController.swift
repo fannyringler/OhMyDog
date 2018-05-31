@@ -75,7 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
-        modelScene = SCNScene(named: "art.scnassets/shibaWouf2.dae")!
+        modelScene = SCNScene(named: "art.scnassets/shiba.dae")!
         
         nodeModel = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
     }
@@ -179,6 +179,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 let location = SCNVector3(transform.m41, transform.m42, transform.m43)
                 positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                 dogHere = true
+                playAnimation(key: "wouf")
             }
 //        } else {
 //            if let hit = hitResultsFeaturePoints.first {
@@ -342,6 +343,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Load all the DAE animations
         loadAnimation(withKey: "wouf", sceneName: "art.scnassets/shibaWouf2", animationIdentifier: "shibaWouf2-1")
         loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk2", animationIdentifier: "shibaWalk2-1")
+        loadAnimation(withKey: "waitStandUp", sceneName: "art.scnassets/shibaWaitStandUp2", animationIdentifier: "shibaWaitStandUp2-1")
     }
     
     func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
@@ -361,7 +363,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func playAnimation(key: String) {
         // Add the animation to start playing it right away
-        sceneView.scene.rootNode.addAnimation(animations[key]!, forKey: key)
+        let animation = animations[key]
+        animation?.repeatCount = .infinity
+        sceneView.scene.rootNode.addAnimation(animation!, forKey: key)
     }
     
     func stopAnimation(key: String) {
@@ -371,7 +375,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func move(){
         if walk && destination != nil && dog != nil {
-            //playAnimation(key: "walk")
             var indexX = dog.position.x
             var smallerX = destination.x < dogPosition.x
             if smallerX {
@@ -406,7 +409,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                    let location = SCNVector3(transform.m41, transform.m42, transform.m43)
 //                    positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
-                    //stopAnimation(key: "walk")
+                    stopAnimation(key: "walk")
+                    playAnimation(key: "waitStandUp")
                 }
             }
             
@@ -427,6 +431,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             dog.eulerAngles.y -= angle
             //dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             walk = true
+            stopAnimation(key: "wouf")
+            playAnimation(key: "walk")
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
