@@ -23,6 +23,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var walk = false
     var destination:SCNVector3!
     var timer = Timer()
+    var dogAnchor:ARAnchor!
+    var positionOfCamera:SCNVector3!
     
     var focusSquare = FocusSquare()
     
@@ -60,6 +62,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         loadAnimations()
         
+//        sceneView.debugOptions = ARSCNDebugOptions.showWorldOrigin
+        
         sceneLight = SCNLight()
         sceneLight.type = .omni
         
@@ -71,7 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
-        modelScene = SCNScene(named: "art.scnassets/shibaWouf.dae")!
+        modelScene = SCNScene(named: "art.scnassets/shibaWouf2.dae")!
         
         nodeModel = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
     }
@@ -115,8 +119,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func calculateDistance(from:SCNVector3,to:SCNVector3) -> Float{
         let x = from.x - to.x
-        let y = from.y - to.y
-        return sqrtf( (x * x) + (y * y))
+        let z = from.z - to.z
+        return sqrtf( (x * x) + (z * z))
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -145,6 +149,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 node.removeFromParentNode()
                 dogHere = false
                 dog = nil
+                walk = false
                 return
             }
         }
@@ -166,23 +171,36 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     finalTransform = simd_mul(hit.worldTransform,rotate)
                 }
                 // Use the resulting matrix to position the anchor
-                sceneView.session.add(anchor: ARAnchor(transform: finalTransform))
+                dogAnchor = ARAnchor(transform: finalTransform)
+                sceneView.session.add(anchor: dogAnchor)
+                guard let pointOfView = sceneView.pointOfView else { return }
+                let transform = pointOfView.transform
+                let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+                let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+                positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                 dogHere = true
             }
-        } else {
-            if let hit = hitResultsFeaturePoints.first {
-                // hit.localTransform ou hit.worldTransform
-                destination  = SCNVector3 (hit.worldTransform.translation.x, hit.worldTransform.translation.y, hit.worldTransform.translation.z)
-                modelScene = SCNScene(named: "art.scnassets/shibaWalk.dae")!
-                if dog != nil {
-                    //playAnimation(key: "walk")
-                    //dog = modelScene.rootNode.childNode(withName: nodeName, recursively: true)
-                    walk = true
-                    //dog.position = position
-                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
-                    
-                }
-            }
+//        } else {
+//            if let hit = hitResultsFeaturePoints.first {
+//                if dog != nil {
+//                    if !walk {
+//                        walk = true
+//                        destination  = SCNVector3 (hit.worldTransform.translation.x, hit.worldTransform.translation.y, hit.worldTransform.translation.z)
+//                        let distanceDestToCam = calculateDistance(from: destination, to: positionOfCamera)
+//                        let distanceFromToCam = calculateDistance(from: dogPosition, to: positionOfCamera)
+//                        let distanceDestToFrom = calculateDistance(from: destination, to: dog.position)
+//                        let angle = acos((distanceFromToCam * distanceFromToCam + distanceDestToFrom * distanceDestToFrom - distanceDestToCam * distanceDestToCam) / (2 * distanceFromToCam * distanceDestToFrom)) //* 180 / Float.pi
+//                        print(angle)
+//                        dog.eulerAngles.y = angle
+//
+//                        //dog.transform = SCNMatrix4MakeRotation((Float.pi/2 - atan(dogPosition.x / dogPosition.z))*180/Float.pi , 0, 1, 0)
+//                        //dog.transform = SCNMatrix4MakeRotation(sceneView.session.currentFrame!.camera.eulerAngles.y, 0, 1, 0)
+//
+////                        dog.eulerAngles.y = atan((dogPosition.x - destination.x)/(dogPosition.z - destination.z))*180/Float.pi
+//                        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
+//                    }
+//                }
+//            }
         }
     }
         
@@ -198,9 +216,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+       
         if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
             sceneLight.intensity = estimate.ambientIntensity
         }
+        
+//        if dog != nil && !walk {
+//            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+//        }
         if dogHere {
             self.focusSquare.hide()
         } else {
@@ -317,13 +340,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func loadAnimations () {
         // Load all the DAE animations
-        loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk", animationIdentifier: "<untitled animation>")
+        loadAnimation(withKey: "wouf", sceneName: "art.scnassets/shibaWouf2", animationIdentifier: "shibaWouf2-1")
+        loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk2", animationIdentifier: "shibaWalk2-1")
     }
     
     func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
         let sceneURL = Bundle.main.url(forResource: sceneName, withExtension: "dae")
         let sceneSource = SCNSceneSource(url: sceneURL!, options: nil)
-        
         if let animationObject = sceneSource?.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) {
             // The animation will only play once
             animationObject.repeatCount = 1
@@ -348,40 +371,67 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func move(){
         if walk && destination != nil && dog != nil {
+            //playAnimation(key: "walk")
             var indexX = dog.position.x
             var smallerX = destination.x < dogPosition.x
             if smallerX {
                 if destination.x < indexX {
-                    indexX -= 0.1
+                    indexX -= 0.01
                 }
             } else {
                 if destination.x > indexX {
-                    indexX += 0.1
+                    indexX += 0.01
                 }
             }
-            var indexY = dog.position.y
-            var smallerY = destination.y < dogPosition.y
-            if smallerY {
-                if destination.y < indexY {
-                    indexY -= 0.1
+            var indexZ = dog.position.z
+            var smallerZ = destination.z < dogPosition.z
+            if smallerZ {
+                if destination.z < indexZ {
+                    indexZ -= 0.01
                 }
             } else {
-                if destination.y > indexY {
-                    indexY += 0.1
+                if destination.z > indexZ {
+                    indexZ += 0.01
                 }
             }
-            dog.position = SCNVector3Make(indexX, indexY, dog.position.z)
-            if (smallerX && smallerY && destination.x > dog.position.x) || (!smallerX && !smallerY && destination.x < dog.position.x){
-                walk = false
-                timer.invalidate()
-                dogPosition = dog.position
+            dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
+            if (smallerZ  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
+                if (smallerZ  && destination.z > dog.position.z) || (!smallerZ  && destination.z < dog.position.z){
+                    walk = false
+                    timer.invalidate()
+                    dogPosition = dog.position
+//                    guard let pointOfView = sceneView.pointOfView else { return }
+//                    let transform = pointOfView.transform
+//                    let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+//                    let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+//                    positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
+                    dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+                    //stopAnimation(key: "walk")
+                }
             }
             
         }
     }
     
-    func moveSlowy(){
-        
+    @IBAction func come(_ sender: Any) {
+        if !walk && dog != nil {
+            guard let pointOfView = sceneView.pointOfView else { return }
+            let transform = pointOfView.transform
+            let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+            destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
+            let distanceDestToCam = calculateDistance(from: destination, to: positionOfCamera)
+            let distanceFromToCam = calculateDistance(from: dogPosition, to: positionOfCamera)
+            let distanceDestToFrom = calculateDistance(from: destination, to: dog.position)
+            let angle = acos((distanceFromToCam * distanceFromToCam + distanceDestToFrom * distanceDestToFrom - distanceDestToCam * distanceDestToCam) / (2 * distanceFromToCam * distanceDestToFrom)) //* 180 / Float.pi
+            dog.eulerAngles.y -= angle
+            //dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+            walk = true
+            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
+        } else {
+            walk = false
+        }
     }
+    
 
 }
