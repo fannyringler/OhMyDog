@@ -539,6 +539,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @IBAction func feed(_ sender: Any) {
         if !feed && dog != nil {
+            let eat = SCNScene(named: "art.scnassets/shibaEat2.dae")!
+            if let bowleat = eat.rootNode.childNodes.first?.childNodes.first {
+                dog.childNodes.first?.addChildNode(bowleat)
+            }
             feed = true
             feedButton.setTitle("Stop", for: .normal)
             playAnimation(key: "drink", infinity: true)
@@ -547,6 +551,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sitButton.isHidden = true
             downButton.isHidden = true
         } else {
+            if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
+                print(bowleat)
+                bowleat.removeFromParentNode()
+            }
             feed = false
             feedButton.setTitle("Mange", for: .normal)
             stopAnimation(key: "drink")
