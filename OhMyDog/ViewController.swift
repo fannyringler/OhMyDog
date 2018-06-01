@@ -21,6 +21,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var dog:SCNNode!
     var animations = [String: CAAnimation]()
     var walk = false
+    var sit = false
     var destination:SCNVector3!
     var timer = Timer()
     var dogAnchor:ARAnchor!
@@ -29,6 +30,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var focusSquare = FocusSquare()
     
     
+    @IBOutlet weak var sitButton: UIButton!
     @IBOutlet weak var comeButton: UIButton!
     
     var session: ARSession {
@@ -76,6 +78,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         dogHere = false
         comeButton.isHidden = true
+        sitButton.isHidden = true
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -155,6 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 dog = nil
                 walk = false
                 comeButton.isHidden = true
+                sitButton.isHidden = true
                 return
             }
         }
@@ -186,7 +190,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 dogHere = true
                 comeButton.isHidden = false
                 comeButton.setTitle("Au pied", for: .normal)
-                playAnimation(key: "wouf")
+                sitButton.isHidden = false
+                sitButton.setTitle("Assis", for: .normal)
+                playAnimation(key: "waitStandUp",infinity: true)
             }
 //        } else {
 //            if let hit = hitResultsFeaturePoints.first {
@@ -350,6 +356,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         loadAnimation(withKey: "wouf", sceneName: "art.scnassets/shibaWouf2", animationIdentifier: "shibaWouf2-1")
         loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk2", animationIdentifier: "shibaWalk2-1")
         loadAnimation(withKey: "waitStandUp", sceneName: "art.scnassets/shibaWaitStandUp2", animationIdentifier: "shibaWaitStandUp2-1")
+        loadAnimation(withKey: "sit", sceneName: "art.scnassets/shibaSit2", animationIdentifier: "shibaSit2-1")
+        loadAnimation(withKey: "waitSit", sceneName: "art.scnassets/shibaWaitSit2", animationIdentifier: "shibaWaitSit2-1")
+        loadAnimation(withKey: "up", sceneName: "art.scnassets/shibaUp2", animationIdentifier: "shibaUp2-1")
     }
     
     func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
@@ -367,11 +376,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func playAnimation(key: String) {
+    func playAnimation(key: String, infinity: Bool) {
         // Add the animation to start playing it right away
-        let animation = animations[key]
-        animation?.repeatCount = .infinity
-        sceneView.scene.rootNode.addAnimation(animation!, forKey: key)
+        if infinity {
+            let animation = animations[key]
+            animation?.repeatCount = .infinity
+            sceneView.scene.rootNode.addAnimation(animation!, forKey: key)
+        } else {
+            sceneView.scene.rootNode.addAnimation(animations[key]!, forKey: key)
+        }
     }
     
     func stopAnimation(key: String) {
@@ -415,8 +428,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                    positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
                     stopAnimation(key: "walk")
-                    playAnimation(key: "waitStandUp")
+                    playAnimation(key: "waitStandUp", infinity: true)
                     comeButton.setTitle("Au pied", for: .normal)
+                    sitButton.isHidden = false
                     timer.invalidate()
                 }
             }
@@ -439,15 +453,36 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             walk = true
             stopAnimation(key: "wouf")
-            playAnimation(key: "walk")
+            playAnimation(key: "walk", infinity: true)
             comeButton.setTitle("Stop", for: .normal)
+            sitButton.isHidden = true
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
+            dogPosition = dog.position
+            sitButton.isHidden = false
             stopAnimation(key: "walk")
+            playAnimation(key: "waitStandUp", infinity: true)
             comeButton.setTitle("Au pied", for: .normal)
         }
     }
     
-
+    @IBAction func sit(_ sender: Any) {
+        if !sit && dog != nil {
+            sit = true
+            playAnimation(key: "waitSit", infinity: true)
+            playAnimation(key: "sit", infinity: false)
+            sitButton.setTitle("Debout", for: .normal)
+            comeButton.isHidden = true
+        } else {
+            sit = false
+            sitButton.setTitle("Assis", for: .normal)
+            stopAnimation(key: "waitSit")
+            stopAnimation(key: "sit")
+            playAnimation(key: "up", infinity: false)
+            comeButton.isHidden = false
+            playAnimation(key: "waitStandUp", infinity: true)
+        }
+    }
+    
 }
