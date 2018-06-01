@@ -158,6 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 dog = nil
                 walk = false
                 comeButton.isHidden = true
+                sitButton.isHidden = true
                 return
             }
         }
