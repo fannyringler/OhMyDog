@@ -22,6 +22,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var animations = [String: CAAnimation]()
     var walk = false
     var sit = false
+    var down = false
     var destination:SCNVector3!
     var timer = Timer()
     var dogAnchor:ARAnchor!
@@ -30,6 +31,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var focusSquare = FocusSquare()
     
     
+    @IBOutlet weak var downButton: UIButton!
     @IBOutlet weak var sitButton: UIButton!
     @IBOutlet weak var comeButton: UIButton!
     
@@ -79,6 +81,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         dogHere = false
         comeButton.isHidden = true
         sitButton.isHidden = true
+        downButton.isHidden = true
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -159,6 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 walk = false
                 comeButton.isHidden = true
                 sitButton.isHidden = true
+                downButton.isHidden = true
                 return
             }
         }
@@ -192,7 +196,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 comeButton.setTitle("Au pied", for: .normal)
                 sitButton.isHidden = false
                 sitButton.setTitle("Assis", for: .normal)
-                playAnimation(key: "waitStandUp",infinity: true)
+                downButton.isHidden = false
+                downButton.setTitle("Couché", for: .normal)
+                //playAnimation(key: "waitStandUp",infinity: true)
             }
 //        } else {
 //            if let hit = hitResultsFeaturePoints.first {
@@ -359,6 +365,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         loadAnimation(withKey: "sit", sceneName: "art.scnassets/shibaSit2", animationIdentifier: "shibaSit2-1")
         loadAnimation(withKey: "waitSit", sceneName: "art.scnassets/shibaWaitSit2", animationIdentifier: "shibaWaitSit2-1")
         loadAnimation(withKey: "up", sceneName: "art.scnassets/shibaUp2", animationIdentifier: "shibaUp2-1")
+        loadAnimation(withKey: "down", sceneName: "art.scnassets/shibaDown2", animationIdentifier: "shibaDown2-1")
+        loadAnimation(withKey: "waitDown", sceneName: "art.scnassets/shibaWaitDown2", animationIdentifier: "shibaWaitDown2-1")
+        loadAnimation(withKey: "downToSit", sceneName: "art.scnassets/shibaDownToSit2", animationIdentifier: "shibaDownToSit2-1")
     }
     
     func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
@@ -431,6 +440,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     playAnimation(key: "waitStandUp", infinity: true)
                     comeButton.setTitle("Au pied", for: .normal)
                     sitButton.isHidden = false
+                    downButton.isHidden = false
                     timer.invalidate()
                 }
             }
@@ -456,11 +466,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             playAnimation(key: "walk", infinity: true)
             comeButton.setTitle("Stop", for: .normal)
             sitButton.isHidden = true
+            downButton.isHidden = true
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
             dogPosition = dog.position
             sitButton.isHidden = false
+            downButton.isHidden = false
             stopAnimation(key: "walk")
             playAnimation(key: "waitStandUp", infinity: true)
             comeButton.setTitle("Au pied", for: .normal)
@@ -474,6 +486,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             playAnimation(key: "sit", infinity: false)
             sitButton.setTitle("Debout", for: .normal)
             comeButton.isHidden = true
+            downButton.isHidden = true
         } else {
             sit = false
             sitButton.setTitle("Assis", for: .normal)
@@ -481,8 +494,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             stopAnimation(key: "sit")
             playAnimation(key: "up", infinity: false)
             comeButton.isHidden = false
+            downButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
         }
     }
+    
+    @IBAction func down(_ sender: Any) {
+        if !down && dog != nil {
+            down = true
+            playAnimation(key: "waitDown", infinity: true)
+            playAnimation(key: "sit", infinity: false)
+            playAnimation(key: "down", infinity: false)
+            downButton.setTitle("Debout", for: .normal)
+            comeButton.isHidden = true
+            sitButton.isHidden = true
+        } else {
+            down = false
+            sit = false
+            downButton.setTitle("Couché", for: .normal)
+            stopAnimation(key: "waitDown")
+            stopAnimation(key: "down")
+            stopAnimation(key: "sit")
+            playAnimation(key: "downToSit", infinity: false)
+            comeButton.isHidden = false
+            sitButton.isHidden = false
+            playAnimation(key: "waitStandUp", infinity: true)
+        }
+    }
+    
     
 }
