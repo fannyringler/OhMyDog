@@ -356,6 +356,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         loadAnimation(withKey: "walk", sceneName: "art.scnassets/shibaWalk2", animationIdentifier: "shibaWalk2-1")
         loadAnimation(withKey: "waitStandUp", sceneName: "art.scnassets/shibaWaitStandUp2", animationIdentifier: "shibaWaitStandUp2-1")
         loadAnimation(withKey: "sit", sceneName: "art.scnassets/shibaSit2", animationIdentifier: "shibaSit2-1")
+        loadAnimation(withKey: "waitSit", sceneName: "art.scnassets/shibaWaitSit2", animationIdentifier: "shibaWaitSit2-1")
+        loadAnimation(withKey: "up", sceneName: "art.scnassets/shibaUp2", animationIdentifier: "shibaUp2-1")
     }
     
     func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
@@ -467,13 +469,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBAction func sit(_ sender: Any) {
         if !sit && dog != nil {
             sit = true
+            playAnimation(key: "waitSit", infinity: true)
             playAnimation(key: "sit", infinity: false)
             sitButton.setTitle("Debout", for: .normal)
             comeButton.isHidden = true
         } else {
             sit = false
             sitButton.setTitle("Assis", for: .normal)
+            stopAnimation(key: "waitSit")
+            stopAnimation(key: "sit")
+            playAnimation(key: "up", infinity: false)
             comeButton.isHidden = false
+            playAnimation(key: "waitStandUp", infinity: true)
         }
     }
     
