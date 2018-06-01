@@ -28,6 +28,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var focusSquare = FocusSquare()
     
+    
+    @IBOutlet weak var comeButton: UIButton!
+    
     var session: ARSession {
         return sceneView.session
     }
@@ -72,6 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
         
         dogHere = false
+        comeButton.isHidden = true
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -150,6 +154,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 dogHere = false
                 dog = nil
                 walk = false
+                comeButton.isHidden = true
                 return
             }
         }
@@ -179,6 +184,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 let location = SCNVector3(transform.m41, transform.m42, transform.m43)
                 positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                 dogHere = true
+                comeButton.isHidden = false
+                comeButton.setTitle("Au pied", for: .normal)
                 playAnimation(key: "wouf")
             }
 //        } else {
@@ -221,7 +228,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
             sceneLight.intensity = estimate.ambientIntensity
         }
-        
 //        if dog != nil && !walk {
 //            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
 //        }
@@ -379,29 +385,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             var smallerX = destination.x < dogPosition.x
             if smallerX {
                 if destination.x < indexX {
-                    indexX -= 0.01
+                    indexX -= 0.02
                 }
             } else {
                 if destination.x > indexX {
-                    indexX += 0.01
+                    indexX += 0.02
                 }
             }
             var indexZ = dog.position.z
             var smallerZ = destination.z < dogPosition.z
             if smallerZ {
                 if destination.z < indexZ {
-                    indexZ -= 0.01
+                    indexZ -= 0.02
                 }
             } else {
                 if destination.z > indexZ {
-                    indexZ += 0.01
+                    indexZ += 0.02
                 }
             }
             dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
             if (smallerZ  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
                 if (smallerZ  && destination.z > dog.position.z) || (!smallerZ  && destination.z < dog.position.z){
                     walk = false
-                    timer.invalidate()
                     dogPosition = dog.position
 //                    guard let pointOfView = sceneView.pointOfView else { return }
 //                    let transform = pointOfView.transform
@@ -411,6 +416,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
                     stopAnimation(key: "walk")
                     playAnimation(key: "waitStandUp")
+                    comeButton.setTitle("Au pied", for: .normal)
+                    timer.invalidate()
                 }
             }
             
@@ -433,9 +440,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             walk = true
             stopAnimation(key: "wouf")
             playAnimation(key: "walk")
+            comeButton.setTitle("Stop", for: .normal)
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
+            stopAnimation(key: "walk")
+            comeButton.setTitle("Au pied", for: .normal)
         }
     }
     

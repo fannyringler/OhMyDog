@@ -10,7 +10,8 @@
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_animations>
-    <animation>
+    <animation id="unnamed_animation__0" name="unnamed_animation__0">
+      <animation id="keyframedAnimations1">
         <source id="genericSource2">
           <float_array id="unnamed_animation__03-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -32,6 +33,8 @@
           <input semantic="OUTPUT" source="#genericSource4"/>
         </sampler>
         <channel source="#unnamed_animation__06" target="Armature_Bone/SID_1"/>
+      </animation>
+      <animation id="keyframedAnimations7">
         <source id="genericSource8">
           <float_array id="unnamed_animation__09-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -53,6 +56,8 @@
           <input semantic="OUTPUT" source="#genericSource10"/>
         </sampler>
         <channel source="#unnamed_animation__012" target="Armature_Bone_002/SID_2"/>
+      </animation>
+      <animation id="keyframedAnimations13">
         <source id="genericSource14">
           <float_array id="unnamed_animation__015-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -74,6 +79,8 @@
           <input semantic="OUTPUT" source="#genericSource16"/>
         </sampler>
         <channel source="#unnamed_animation__018" target="Armature_Bone_001/SID_3"/>
+      </animation>
+      <animation id="keyframedAnimations19">
         <source id="genericSource20">
           <float_array id="unnamed_animation__021-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -95,6 +102,8 @@
           <input semantic="OUTPUT" source="#genericSource22"/>
         </sampler>
         <channel source="#unnamed_animation__024" target="Armature_Bone_003/SID_4"/>
+      </animation>
+      <animation id="keyframedAnimations25">
         <source id="genericSource26">
           <float_array id="unnamed_animation__027-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -116,6 +125,8 @@
           <input semantic="OUTPUT" source="#genericSource28"/>
         </sampler>
         <channel source="#unnamed_animation__030" target="Armature_Neck/SID_5"/>
+      </animation>
+      <animation id="keyframedAnimations31">
         <source id="genericSource32">
           <float_array id="unnamed_animation__033-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -137,6 +148,8 @@
           <input semantic="OUTPUT" source="#genericSource34"/>
         </sampler>
         <channel source="#unnamed_animation__036" target="Armature_head/SID_6"/>
+      </animation>
+      <animation id="keyframedAnimations37">
         <source id="genericSource38">
           <float_array id="unnamed_animation__039-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -158,6 +171,8 @@
           <input semantic="OUTPUT" source="#genericSource40"/>
         </sampler>
         <channel source="#unnamed_animation__042" target="Armature_head_001/SID_7"/>
+      </animation>
+      <animation id="keyframedAnimations43">
         <source id="genericSource44">
           <float_array id="unnamed_animation__045-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -179,6 +194,8 @@
           <input semantic="OUTPUT" source="#genericSource46"/>
         </sampler>
         <channel source="#unnamed_animation__048" target="Armature_head_003/SID_8"/>
+      </animation>
+      <animation id="keyframedAnimations49">
         <source id="genericSource50">
           <float_array id="unnamed_animation__051-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -200,6 +217,8 @@
           <input semantic="OUTPUT" source="#genericSource52"/>
         </sampler>
         <channel source="#unnamed_animation__054" target="Armature_head_002/SID_9"/>
+      </animation>
+      <animation id="keyframedAnimations55">
         <source id="genericSource56">
           <float_array id="unnamed_animation__057-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -221,6 +240,8 @@
           <input semantic="OUTPUT" source="#genericSource58"/>
         </sampler>
         <channel source="#unnamed_animation__060" target="Armature_head_004/SID_10"/>
+      </animation>
+      <animation id="keyframedAnimations61">
         <source id="genericSource62">
           <float_array id="unnamed_animation__063-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -242,6 +263,8 @@
           <input semantic="OUTPUT" source="#genericSource64"/>
         </sampler>
         <channel source="#unnamed_animation__066" target="Armature_head_005/SID_11"/>
+      </animation>
+      <animation id="keyframedAnimations67">
         <source id="genericSource68">
           <float_array id="unnamed_animation__069-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -263,6 +286,8 @@
           <input semantic="OUTPUT" source="#genericSource70"/>
         </sampler>
         <channel source="#unnamed_animation__072" target="Armature_head_006/SID_12"/>
+      </animation>
+      <animation id="keyframedAnimations73">
         <source id="genericSource74">
           <float_array id="unnamed_animation__075-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -284,6 +309,8 @@
           <input semantic="OUTPUT" source="#genericSource76"/>
         </sampler>
         <channel source="#unnamed_animation__078" target="Armature_head_007/SID_13"/>
+      </animation>
+      <animation id="keyframedAnimations79">
         <source id="genericSource80">
           <float_array id="unnamed_animation__081-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -305,6 +332,8 @@
           <input semantic="OUTPUT" source="#genericSource82"/>
         </sampler>
         <channel source="#unnamed_animation__084" target="Armature_head_008/SID_14"/>
+      </animation>
+      <animation id="keyframedAnimations85">
         <source id="genericSource86">
           <float_array id="unnamed_animation__087-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -326,6 +355,8 @@
           <input semantic="OUTPUT" source="#genericSource88"/>
         </sampler>
         <channel source="#unnamed_animation__090" target="Armature_Bone_004/SID_15"/>
+      </animation>
+      <animation id="keyframedAnimations91">
         <source id="genericSource92">
           <float_array id="unnamed_animation__093-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -347,6 +378,8 @@
           <input semantic="OUTPUT" source="#genericSource94"/>
         </sampler>
         <channel source="#unnamed_animation__096" target="Armature_Bone_006/SID_16"/>
+      </animation>
+      <animation id="keyframedAnimations97">
         <source id="genericSource98">
           <float_array id="unnamed_animation__099-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -368,6 +401,8 @@
           <input semantic="OUTPUT" source="#genericSource100"/>
         </sampler>
         <channel source="#unnamed_animation__0102" target="Armature_Bone_008/SID_17"/>
+      </animation>
+      <animation id="keyframedAnimations103">
         <source id="genericSource104">
           <float_array id="unnamed_animation__0105-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -389,6 +424,8 @@
           <input semantic="OUTPUT" source="#genericSource106"/>
         </sampler>
         <channel source="#unnamed_animation__0108" target="Armature_Bone_010/SID_18"/>
+      </animation>
+      <animation id="keyframedAnimations109">
         <source id="genericSource110">
           <float_array id="unnamed_animation__0111-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -410,6 +447,8 @@
           <input semantic="OUTPUT" source="#genericSource112"/>
         </sampler>
         <channel source="#unnamed_animation__0114" target="Armature_Bone_005/SID_19"/>
+      </animation>
+      <animation id="keyframedAnimations115">
         <source id="genericSource116">
           <float_array id="unnamed_animation__0117-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -431,6 +470,8 @@
           <input semantic="OUTPUT" source="#genericSource118"/>
         </sampler>
         <channel source="#unnamed_animation__0120" target="Armature_Bone_007/SID_20"/>
+      </animation>
+      <animation id="keyframedAnimations121">
         <source id="genericSource122">
           <float_array id="unnamed_animation__0123-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -452,6 +493,8 @@
           <input semantic="OUTPUT" source="#genericSource124"/>
         </sampler>
         <channel source="#unnamed_animation__0126" target="Armature_Bone_009/SID_21"/>
+      </animation>
+      <animation id="keyframedAnimations127">
         <source id="genericSource128">
           <float_array id="unnamed_animation__0129-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -473,6 +516,8 @@
           <input semantic="OUTPUT" source="#genericSource130"/>
         </sampler>
         <channel source="#unnamed_animation__0132" target="Armature_Bone_011/SID_22"/>
+      </animation>
+      <animation id="keyframedAnimations133">
         <source id="genericSource134">
           <float_array id="unnamed_animation__0135-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -494,6 +539,8 @@
           <input semantic="OUTPUT" source="#genericSource136"/>
         </sampler>
         <channel source="#unnamed_animation__0138" target="Armature_Bone_012/SID_23"/>
+      </animation>
+      <animation id="keyframedAnimations139">
         <source id="genericSource140">
           <float_array id="unnamed_animation__0141-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -515,6 +562,8 @@
           <input semantic="OUTPUT" source="#genericSource142"/>
         </sampler>
         <channel source="#unnamed_animation__0144" target="Armature_Bone_021/SID_24"/>
+      </animation>
+      <animation id="keyframedAnimations145">
         <source id="genericSource146">
           <float_array id="unnamed_animation__0147-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -536,6 +585,8 @@
           <input semantic="OUTPUT" source="#genericSource148"/>
         </sampler>
         <channel source="#unnamed_animation__0150" target="Armature_Bone_013/SID_25"/>
+      </animation>
+      <animation id="keyframedAnimations151">
         <source id="genericSource152">
           <float_array id="unnamed_animation__0153-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -557,6 +608,8 @@
           <input semantic="OUTPUT" source="#genericSource154"/>
         </sampler>
         <channel source="#unnamed_animation__0156" target="Armature_Bone_015/SID_26"/>
+      </animation>
+      <animation id="keyframedAnimations157">
         <source id="genericSource158">
           <float_array id="unnamed_animation__0159-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -578,6 +631,8 @@
           <input semantic="OUTPUT" source="#genericSource160"/>
         </sampler>
         <channel source="#unnamed_animation__0162" target="Armature_Bone_017/SID_27"/>
+      </animation>
+      <animation id="keyframedAnimations163">
         <source id="genericSource164">
           <float_array id="unnamed_animation__0165-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -599,6 +654,8 @@
           <input semantic="OUTPUT" source="#genericSource166"/>
         </sampler>
         <channel source="#unnamed_animation__0168" target="Armature_Bone_019/SID_28"/>
+      </animation>
+      <animation id="keyframedAnimations169">
         <source id="genericSource170">
           <float_array id="unnamed_animation__0171-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -620,6 +677,8 @@
           <input semantic="OUTPUT" source="#genericSource172"/>
         </sampler>
         <channel source="#unnamed_animation__0174" target="Armature_Bone_014/SID_29"/>
+      </animation>
+      <animation id="keyframedAnimations175">
         <source id="genericSource176">
           <float_array id="unnamed_animation__0177-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -641,6 +700,8 @@
           <input semantic="OUTPUT" source="#genericSource178"/>
         </sampler>
         <channel source="#unnamed_animation__0180" target="Armature_Bone_016/SID_30"/>
+      </animation>
+      <animation id="keyframedAnimations181">
         <source id="genericSource182">
           <float_array id="unnamed_animation__0183-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -662,6 +723,8 @@
           <input semantic="OUTPUT" source="#genericSource184"/>
         </sampler>
         <channel source="#unnamed_animation__0186" target="Armature_Bone_018/SID_31"/>
+      </animation>
+      <animation id="keyframedAnimations187">
         <source id="genericSource188">
           <float_array id="unnamed_animation__0189-array" count="9">0 0.208333 0.416667 0.625 0.833333 1.04167 1.25 1.45833 1.66667 </float_array>
           <technique_common>
@@ -683,8 +746,10 @@
           <input semantic="OUTPUT" source="#genericSource190"/>
         </sampler>
         <channel source="#unnamed_animation__0192" target="Armature_Bone_020/SID_32"/>
-  </animation>
-</library_animations>  <library_images>
+      </animation>
+    </animation>
+  </library_animations>
+  <library_images>
     <image id="image193">
       <init_from>eye.png.012.png</init_from>
     </image>
