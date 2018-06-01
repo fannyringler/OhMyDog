@@ -444,7 +444,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
+            dogPosition = dog.position
+            
             stopAnimation(key: "walk")
+            playAnimation(key: "waitStandUp")
             comeButton.setTitle("Au pied", for: .normal)
         }
     }
