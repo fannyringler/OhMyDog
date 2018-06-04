@@ -24,6 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var sit = false
     var down = false
     var feed = false
+    var drink = false
     var destination:SCNVector3!
     var timer = Timer()
     var dogAnchor:ARAnchor!
@@ -32,6 +33,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var focusSquare = FocusSquare()
     
     
+    @IBOutlet weak var drinkButton: UIButton!
     @IBOutlet weak var feedButton: UIButton!
     @IBOutlet weak var downButton: UIButton!
     @IBOutlet weak var sitButton: UIButton!
@@ -85,6 +87,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sitButton.isHidden = true
         downButton.isHidden = true
         feedButton.isHidden = true
+        drinkButton.isHidden = true
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -167,6 +170,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 sitButton.isHidden = true
                 downButton.isHidden = true
                 feedButton.isHidden = true
+                drinkButton.isHidden = true
                 return
             }
         }
@@ -204,6 +208,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 downButton.setTitle("Couché", for: .normal)
                 feedButton.isHidden = false
                 feedButton.setTitle("Mange", for: .normal)
+                drinkButton.isHidden = false
+                drinkButton.setTitle("Bois", for: .normal)
                 //playAnimation(key: "waitStandUp",infinity: true)
             }
 //        } else {
@@ -450,6 +456,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     sitButton.isHidden = false
                     downButton.isHidden = false
                     feedButton.isHidden = false
+                    drinkButton.isHidden = false
                     timer.invalidate()
                 }
             }
@@ -477,6 +484,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sitButton.isHidden = true
             downButton.isHidden = true
             feedButton.isHidden = true
+            drinkButton.isHidden = true
             timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
@@ -484,6 +492,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sitButton.isHidden = false
             downButton.isHidden = false
             feedButton.isHidden = false
+            drinkButton.isHidden = false
             stopAnimation(key: "walk")
             playAnimation(key: "waitStandUp", infinity: true)
             comeButton.setTitle("Au pied", for: .normal)
@@ -499,6 +508,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             comeButton.isHidden = true
             downButton.isHidden = true
             feedButton.isHidden = true
+            drinkButton.isHidden = true
         } else {
             sit = false
             sitButton.setTitle("Assis", for: .normal)
@@ -508,6 +518,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             comeButton.isHidden = false
             downButton.isHidden = false
             feedButton.isHidden = false
+            drinkButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
         }
     }
@@ -522,6 +533,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             comeButton.isHidden = true
             sitButton.isHidden = true
             feedButton.isHidden = true
+            drinkButton.isHidden = true
         } else {
             down = false
             sit = false
@@ -533,6 +545,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             comeButton.isHidden = false
             sitButton.isHidden = false
             feedButton.isHidden = false
+            drinkButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
         }
     }
@@ -545,23 +558,51 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
             feed = true
             feedButton.setTitle("Stop", for: .normal)
-            playAnimation(key: "drink", infinity: true)
-            playAnimation(key: "eat", infinity: false)
+            playAnimation(key: "eat", infinity: true)
             comeButton.isHidden = true
             sitButton.isHidden = true
             downButton.isHidden = true
+            drinkButton.isHidden = true
         } else {
             if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                print(bowleat)
-                bowleat.removeFromParentNode()
+                dog.childNodes.first?.removeFromParentNode()
             }
             feed = false
             feedButton.setTitle("Mange", for: .normal)
-            stopAnimation(key: "drink")
             stopAnimation(key: "eat")
             comeButton.isHidden = false
             sitButton.isHidden = false
             downButton.isHidden = false
+            drinkButton.isHidden = false
+            playAnimation(key: "waitStandUp", infinity: true)
+        }
+    }
+    
+    @IBAction func drink(_ sender: Any) {
+        if !drink && dog != nil {
+            let animation = SCNScene(named: "art.scnassets/shibaDrink2.dae")!
+            if let bowldrink = animation.rootNode.childNodes.first?.childNodes.first {
+                dog.childNodes.first?.addChildNode(bowldrink)
+            }
+            drink = true
+            drinkButton.setTitle("Stop", for: .normal)
+            playAnimation(key: "drink", infinity: true)
+            comeButton.isHidden = true
+            sitButton.isHidden = true
+            downButton.isHidden = true
+            feedButton.isHidden = true
+        } else {
+            if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
+                print("last")
+                bowldrink.removeFromParentNode()
+            }
+            drink = false
+            drinkButton.setTitle("Bois", for: .normal)
+            stopAnimation(key: "drink")
+            comeButton.isHidden = false
+            sitButton.isHidden = false
+            downButton.isHidden = false
+            feedButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
         }
     }
