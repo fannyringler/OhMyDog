@@ -565,7 +565,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             drinkButton.isHidden = true
         } else {
             if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                dog.childNodes.first?.removeFromParentNode()
+                if bowleat.name == "DogBowl" {
+                    bowleat.removeFromParentNode()
+                }
             }
             feed = false
             feedButton.setTitle("Mange", for: .normal)
@@ -593,8 +595,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             feedButton.isHidden = true
         } else {
             if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                print("last")
-                bowldrink.removeFromParentNode()
+                if bowldrink.name == "DogBowl" {
+                    bowldrink.removeFromParentNode()
+                }
             }
             drink = false
             drinkButton.setTitle("Bois", for: .normal)
