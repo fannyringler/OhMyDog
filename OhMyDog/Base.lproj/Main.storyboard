@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="OhMyDog" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3xh-eW-n6F">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kwR-tK-uH6">
+                                <rect key="frame" x="16" y="579" width="92" height="30"/>
+                                <state key="normal" title="Au pied" image="AuPied"/>
+                                <connections>
+                                    <action selector="come:" destination="BV1-FR-VrT" eventType="touchUpInside" id="3AJ-tk-W3I"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tKp-U4-QL0">
+                                <rect key="frame" x="16" y="617" width="84" height="30"/>
+                                <state key="normal" title="Button" image="Assis"/>
+                                <connections>
+                                    <action selector="sit:" destination="BV1-FR-VrT" eventType="touchUpInside" id="IlK-hl-JkO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1m-20-969">
+                                <rect key="frame" x="275" y="579" width="84" height="30"/>
+                                <state key="normal" title="Button" image="feed"/>
+                                <connections>
+                                    <action selector="feed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="5I5-ov-0Li"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FlJ-OU-AUY">
+                                <rect key="frame" x="275" y="619" width="84" height="28"/>
+                                <state key="normal" title="Button" image="drink"/>
+                                <connections>
+                                    <action selector="drink:" destination="BV1-FR-VrT" eventType="touchUpInside" id="AA7-PA-MBI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQk-2i-Xoh">
+                                <rect key="frame" x="16" y="542" width="84" height="29"/>
+                                <state key="normal" title="Button" image="Coucher"/>
+                                <connections>
+                                    <action selector="down:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Ae6-eh-qkE"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="FlJ-OU-AUY" firstAttribute="top" secondItem="O1m-20-969" secondAttribute="bottom" constant="10" id="6cU-xi-Lbw"/>
+                            <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leadingMargin" id="6ed-3m-5s9"/>
+                            <constraint firstAttribute="bottom" secondItem="FlJ-OU-AUY" secondAttribute="bottom" constant="20" symbolic="YES" id="BD3-iO-crM"/>
+                            <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="RJh-Iy-COK" secondAttribute="bottom" id="Dbd-ba-FAG"/>
+                            <constraint firstItem="FlJ-OU-AUY" firstAttribute="bottom" secondItem="tKp-U4-QL0" secondAttribute="bottom" id="GWz-3B-5Ap"/>
+                            <constraint firstItem="kwR-tK-uH6" firstAttribute="top" secondItem="xQk-2i-Xoh" secondAttribute="bottom" constant="8" id="PR5-yw-HMi"/>
+                            <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="3xh-eW-n6F" secondAttribute="top" id="ahl-pW-Qdp"/>
+                            <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="kwR-tK-uH6" secondAttribute="leading" id="bqq-Lz-kup"/>
+                            <constraint firstItem="tKp-U4-QL0" firstAttribute="top" secondItem="kwR-tK-uH6" secondAttribute="bottom" constant="8" symbolic="YES" id="eLB-aM-qNG"/>
+                            <constraint firstItem="FlJ-OU-AUY" firstAttribute="trailing" secondItem="3xh-eW-n6F" secondAttribute="trailingMargin" id="efZ-NF-noh"/>
+                            <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leading" id="gLt-ja-4ux"/>
+                            <constraint firstItem="xQk-2i-Xoh" firstAttribute="leading" secondItem="RJh-Iy-COK" secondAttribute="leading" constant="16" id="kl4-P8-oEL"/>
+                            <constraint firstItem="FlJ-OU-AUY" firstAttribute="leading" secondItem="O1m-20-969" secondAttribute="leading" id="klc-IT-Zx8"/>
+                            <constraint firstAttribute="trailing" secondItem="BrB-h1-WRS" secondAttribute="trailing" id="mDQ-kK-JeO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="RJh-Iy-COK"/>
+                    </view>
+                    <connections>
+                        <outlet property="comeButton" destination="kwR-tK-uH6" id="B3h-mF-14d"/>
+                        <outlet property="downButton" destination="xQk-2i-Xoh" id="R1T-Zm-fWx"/>
+                        <outlet property="drinkButton" destination="FlJ-OU-AUY" id="m4U-cK-dDF"/>
+                        <outlet property="feedButton" destination="O1m-20-969" id="qiE-Es-XHI"/>
+                        <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="sitButton" destination="tKp-U4-QL0" id="tWJ-wK-QSz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Assis" width="30" height="30"/>
+        <image name="AuPied" width="30" height="30"/>
+        <image name="Coucher" width="30" height="29"/>
+        <image name="drink" width="30" height="28"/>
+        <image name="feed" width="30" height="30"/>
+    </resources>
+</document>
