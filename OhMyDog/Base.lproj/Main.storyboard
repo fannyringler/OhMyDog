@@ -57,20 +57,30 @@
                                     <action selector="down:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Ae6-eh-qkE"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOa-RU-Edk">
+                                <rect key="frame" x="172" y="617.5" width="30" height="30"/>
+                                <state key="normal" image="voice"/>
+                                <connections>
+                                    <action selector="recordButtonTapped" destination="BV1-FR-VrT" eventType="touchUpInside" id="7hd-3M-idH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="top" secondItem="O1m-20-969" secondAttribute="bottom" constant="10" id="6cU-xi-Lbw"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leadingMargin" id="6ed-3m-5s9"/>
+                            <constraint firstItem="mOa-RU-Edk" firstAttribute="centerY" secondItem="FlJ-OU-AUY" secondAttribute="centerY" id="8mg-aL-J6k"/>
                             <constraint firstAttribute="bottom" secondItem="FlJ-OU-AUY" secondAttribute="bottom" constant="20" symbolic="YES" id="BD3-iO-crM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="RJh-Iy-COK" secondAttribute="bottom" id="Dbd-ba-FAG"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="bottom" secondItem="tKp-U4-QL0" secondAttribute="bottom" id="GWz-3B-5Ap"/>
                             <constraint firstItem="kwR-tK-uH6" firstAttribute="top" secondItem="xQk-2i-Xoh" secondAttribute="bottom" constant="8" id="PR5-yw-HMi"/>
+                            <constraint firstItem="mOa-RU-Edk" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="Qzf-o3-spP"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="3xh-eW-n6F" secondAttribute="top" id="ahl-pW-Qdp"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="kwR-tK-uH6" secondAttribute="leading" id="bqq-Lz-kup"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="top" secondItem="kwR-tK-uH6" secondAttribute="bottom" constant="8" symbolic="YES" id="eLB-aM-qNG"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="trailing" secondItem="3xh-eW-n6F" secondAttribute="trailingMargin" id="efZ-NF-noh"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leading" id="gLt-ja-4ux"/>
+                            <constraint firstItem="mOa-RU-Edk" firstAttribute="centerY" secondItem="tKp-U4-QL0" secondAttribute="centerY" id="jxK-4n-ppQ"/>
                             <constraint firstItem="xQk-2i-Xoh" firstAttribute="leading" secondItem="RJh-Iy-COK" secondAttribute="leading" constant="16" id="kl4-P8-oEL"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="leading" secondItem="O1m-20-969" secondAttribute="leading" id="klc-IT-Zx8"/>
                             <constraint firstAttribute="trailing" secondItem="BrB-h1-WRS" secondAttribute="trailing" id="mDQ-kK-JeO"/>
@@ -82,6 +92,7 @@
                         <outlet property="downButton" destination="xQk-2i-Xoh" id="R1T-Zm-fWx"/>
                         <outlet property="drinkButton" destination="FlJ-OU-AUY" id="m4U-cK-dDF"/>
                         <outlet property="feedButton" destination="O1m-20-969" id="qiE-Es-XHI"/>
+                        <outlet property="recordButton" destination="mOa-RU-Edk" id="tsJ-uL-cV2"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
                         <outlet property="sitButton" destination="tKp-U4-QL0" id="tWJ-wK-QSz"/>
                     </connections>
@@ -96,5 +107,6 @@
         <image name="Coucher" width="30" height="29"/>
         <image name="drink" width="30" height="28"/>
         <image name="feed" width="30" height="30"/>
+        <image name="voice" width="30" height="30"/>
     </resources>
 </document>
