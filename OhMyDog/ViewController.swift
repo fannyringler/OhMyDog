@@ -45,6 +45,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     @IBOutlet weak var downButton: UIButton!
     @IBOutlet weak var sitButton: UIButton!
     @IBOutlet weak var comeButton: UIButton!
+    @IBOutlet weak var backToHome: UIButton!
+    @IBOutlet weak var barkButton: UIButton!
     
     var session: ARSession {
         return sceneView.session
@@ -93,11 +95,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
         
         dogHere = false
+        backToHome.isHidden = true
         comeButton.isHidden = true
         sitButton.isHidden = true
         downButton.isHidden = true
         feedButton.isHidden = true
         drinkButton.isHidden = true
+        barkButton.isHidden = true
         
         sceneView.scene.rootNode.addChildNode(lightNode)
         
@@ -171,24 +175,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
         let hitResults: [SCNHitTestResult]  =
             sceneView.hitTest(location, options: hitTestOptions)
-        if let hit = hitResults.first {
-            if let node = getParent(hit.node) {
-                node.removeFromParentNode()
-                dogHere = false
-                dog = nil
-                walk = false
-                comeButton.isHidden = true
-                sitButton.isHidden = true
-                downButton.isHidden = true
-                feedButton.isHidden = true
-                drinkButton.isHidden = true
-                audioEngine.stop()
-                recognitionRequest?.endAudio()
-                recordButton.isHidden = true
-                recordButton.setTitle("", for: .normal)
-                return
-            }
-        }
         let hitResultsFeaturePoints: [ARHitTestResult] =
             sceneView.hitTest(screenCenter, types: .featurePoint)
         if !dogHere {
@@ -215,6 +201,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 let location = SCNVector3(transform.m41, transform.m42, transform.m43)
                 positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
                 dogHere = true
+                backToHome.isHidden = false
+                barkButton.isHidden = false
+                barkButton.setTitle("Aboie", for: .normal)
                 comeButton.isHidden = false
                 comeButton.setTitle("Au pied", for: .normal)
                 sitButton.isHidden = false
@@ -226,6 +215,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 drinkButton.isHidden = false
                 drinkButton.setTitle("Bois", for: .normal)
                 recordButton.isHidden = false
+                recordButton.setTitle("Donner un ordre", for: .normal)
             }
         }
     }
@@ -442,6 +432,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                     sitButton.isHidden = false
                     downButton.isHidden = false
                     feedButton.isHidden = false
+                    barkButton.isHidden = false
                     drinkButton.isHidden = false
                     recordButton.isHidden = false
                     timer.invalidate()
@@ -470,6 +461,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             comeButton.setTitle("Stop", for: .normal)
             sitButton.isHidden = true
             downButton.isHidden = true
+            barkButton.isHidden = true
             feedButton.isHidden = true
             audioEngine.stop()
             recognitionRequest?.endAudio()
@@ -483,6 +475,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             sitButton.isHidden = false
             downButton.isHidden = false
             feedButton.isHidden = false
+            barkButton.isHidden = false
             drinkButton.isHidden = false
             recordButton.isHidden = false
             stopAnimation(key: "walk")
@@ -499,6 +492,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             sitButton.setTitle("Debout", for: .normal)
             comeButton.isHidden = true
             downButton.isHidden = true
+            barkButton.isHidden = true
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isHidden = true
@@ -514,6 +508,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             comeButton.isHidden = false
             downButton.isHidden = false
             feedButton.isHidden = false
+            barkButton.isHidden = false
             drinkButton.isHidden = false
             recordButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
@@ -534,6 +529,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             recordButton.isHidden = true
             recordButton.setTitle("", for: .normal)
             feedButton.isHidden = true
+            barkButton.isHidden = true
             drinkButton.isHidden = true
         } else {
             down = false
@@ -546,6 +542,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             comeButton.isHidden = false
             sitButton.isHidden = false
             feedButton.isHidden = false
+            barkButton.isHidden = false
             recordButton.isHidden = false
             drinkButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
@@ -562,6 +559,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feedButton.setTitle("Stop", for: .normal)
             playAnimation(key: "eat", infinity: true)
             comeButton.isHidden = true
+            barkButton.isHidden = true
             sitButton.isHidden = true
             audioEngine.stop()
             recognitionRequest?.endAudio()
@@ -579,6 +577,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feedButton.setTitle("Mange", for: .normal)
             stopAnimation(key: "eat")
             comeButton.isHidden = false
+            barkButton.isHidden = false
             sitButton.isHidden = false
             downButton.isHidden = false
             recordButton.isHidden = false
@@ -598,6 +597,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             playAnimation(key: "drink", infinity: true)
             comeButton.isHidden = true
             sitButton.isHidden = true
+            barkButton.isHidden = true
             downButton.isHidden = true
             feedButton.isHidden = true
             recordButton.isHidden = true
@@ -613,16 +613,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             comeButton.isHidden = false
             sitButton.isHidden = false
             downButton.isHidden = false
+            barkButton.isHidden = false
             recordButton.isHidden = false
             feedButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
         }
     }
     
+    @IBAction func bark(_ sender: Any) {
+        playAnimation(key: "wouf", infinity: false)
+    }
+    
     private func startRecording() throws {
         comeButton.isHidden = true
         sitButton.isHidden = true
         downButton.isHidden = true
+        barkButton.isHidden = true
         feedButton.isHidden = true
         drinkButton.isHidden = true
         // Cancel the previous task if it's running.
@@ -650,7 +656,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             var isFinal = false
             var sentence = result?.bestTranscription.formattedString
             print(sentence)
-            self.treat(sentence!)
+            if sentence != nil {
+                self.treat(sentence!)
+            }
             self.audioEngine.stop()
             recognitionRequest.endAudio()
 //            try! self.audioEngine.start()
@@ -697,6 +705,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             comeButton.isHidden = false
             sitButton.isHidden = false
             downButton.isHidden = false
+            barkButton.isHidden = false
             drinkButton.isHidden = false
             feedButton.isHidden = false
         } else {
@@ -759,11 +768,42 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         default:
             self.comeButton.isHidden = false
             self.sitButton.isHidden = false
+            self.barkButton.isHidden = false
             self.downButton.isHidden = false
             self.feedButton.isHidden = false
             self.drinkButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
             break
+        }
+    }
+    
+    @IBAction func backToHomeTapped(_ sender: Any) {
+        if dog != nil{
+            dog.removeFromParentNode()
+            backToHome.isHidden = true
+            dogHere = false
+            dog = nil
+            comeButton.isHidden = true
+            sitButton.isHidden = true
+            downButton.isHidden = true
+            feedButton.isHidden = true
+            barkButton.isHidden = true
+            drinkButton.isHidden = true
+            recordButton.isHidden = true
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
+            recordButton.isHidden = true
+            recordButton.setTitle("", for: .normal)
+            walk = false
+            sit = false
+            down = false
+            feed = false
+            drink = false
+        }
+        for child in (sceneView.scene.rootNode.childNodes.last?.childNodes)! {
+            if(child.name == "Armature"){
+                child.removeFromParentNode()
+            }
         }
     }
 }

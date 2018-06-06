@@ -23,62 +23,80 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kwR-tK-uH6">
-                                <rect key="frame" x="16" y="579" width="92" height="30"/>
+                                <rect key="frame" x="16" y="559" width="102" height="40"/>
                                 <state key="normal" title="Au pied" image="AuPied"/>
                                 <connections>
                                     <action selector="come:" destination="BV1-FR-VrT" eventType="touchUpInside" id="3AJ-tk-W3I"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tKp-U4-QL0">
-                                <rect key="frame" x="16" y="617" width="84" height="30"/>
+                                <rect key="frame" x="16" y="607" width="94" height="40"/>
                                 <state key="normal" title="Button" image="Assis"/>
                                 <connections>
                                     <action selector="sit:" destination="BV1-FR-VrT" eventType="touchUpInside" id="IlK-hl-JkO"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1m-20-969">
-                                <rect key="frame" x="275" y="579" width="84" height="30"/>
+                                <rect key="frame" x="265" y="557" width="94" height="40"/>
                                 <state key="normal" title="Button" image="feed"/>
                                 <connections>
                                     <action selector="feed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="5I5-ov-0Li"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FlJ-OU-AUY">
-                                <rect key="frame" x="275" y="619" width="84" height="28"/>
+                                <rect key="frame" x="265" y="607" width="94" height="40"/>
                                 <state key="normal" title="Button" image="drink"/>
                                 <connections>
                                     <action selector="drink:" destination="BV1-FR-VrT" eventType="touchUpInside" id="AA7-PA-MBI"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQk-2i-Xoh">
-                                <rect key="frame" x="16" y="542" width="84" height="29"/>
+                                <rect key="frame" x="16" y="512" width="94" height="39"/>
                                 <state key="normal" title="Button" image="Coucher"/>
                                 <connections>
                                     <action selector="down:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Ae6-eh-qkE"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOa-RU-Edk">
-                                <rect key="frame" x="172" y="617.5" width="30" height="30"/>
+                                <rect key="frame" x="167" y="607" width="40" height="40"/>
                                 <state key="normal" image="voice"/>
                                 <connections>
                                     <action selector="recordButtonTapped" destination="BV1-FR-VrT" eventType="touchUpInside" id="7hd-3M-idH"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFj-Bi-hxa">
+                                <rect key="frame" x="24" y="27" width="40" height="40"/>
+                                <state key="normal" image="home"/>
+                                <connections>
+                                    <action selector="backToHomeTapped:" destination="BV1-FR-VrT" eventType="touchUpInside" id="ep1-K3-wLC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kv5-uU-hxc">
+                                <rect key="frame" x="265" y="511" width="94" height="40"/>
+                                <state key="normal" title="Button" image="bark"/>
+                                <connections>
+                                    <action selector="bark:" destination="BV1-FR-VrT" eventType="touchUpInside" id="IJl-FQ-efk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="OFj-Bi-hxa" firstAttribute="top" secondItem="RJh-Iy-COK" secondAttribute="top" constant="7" id="1RU-le-7AH"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="top" secondItem="O1m-20-969" secondAttribute="bottom" constant="10" id="6cU-xi-Lbw"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leadingMargin" id="6ed-3m-5s9"/>
                             <constraint firstItem="mOa-RU-Edk" firstAttribute="centerY" secondItem="FlJ-OU-AUY" secondAttribute="centerY" id="8mg-aL-J6k"/>
                             <constraint firstAttribute="bottom" secondItem="FlJ-OU-AUY" secondAttribute="bottom" constant="20" symbolic="YES" id="BD3-iO-crM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="RJh-Iy-COK" secondAttribute="bottom" id="Dbd-ba-FAG"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="bottom" secondItem="tKp-U4-QL0" secondAttribute="bottom" id="GWz-3B-5Ap"/>
+                            <constraint firstItem="OFj-Bi-hxa" firstAttribute="leading" secondItem="RJh-Iy-COK" secondAttribute="leading" constant="24" id="OnJ-ap-i3g"/>
                             <constraint firstItem="kwR-tK-uH6" firstAttribute="top" secondItem="xQk-2i-Xoh" secondAttribute="bottom" constant="8" id="PR5-yw-HMi"/>
                             <constraint firstItem="mOa-RU-Edk" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="Qzf-o3-spP"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="3xh-eW-n6F" secondAttribute="top" id="ahl-pW-Qdp"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="leading" secondItem="kwR-tK-uH6" secondAttribute="leading" id="bqq-Lz-kup"/>
+                            <constraint firstItem="O1m-20-969" firstAttribute="top" secondItem="Kv5-uU-hxc" secondAttribute="bottom" constant="8" symbolic="YES" id="dMC-Po-ayD"/>
                             <constraint firstItem="tKp-U4-QL0" firstAttribute="top" secondItem="kwR-tK-uH6" secondAttribute="bottom" constant="8" symbolic="YES" id="eLB-aM-qNG"/>
                             <constraint firstItem="FlJ-OU-AUY" firstAttribute="trailing" secondItem="3xh-eW-n6F" secondAttribute="trailingMargin" id="efZ-NF-noh"/>
+                            <constraint firstItem="Kv5-uU-hxc" firstAttribute="leading" secondItem="O1m-20-969" secondAttribute="leading" id="g5d-ZH-8E2"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="3xh-eW-n6F" secondAttribute="leading" id="gLt-ja-4ux"/>
                             <constraint firstItem="mOa-RU-Edk" firstAttribute="centerY" secondItem="tKp-U4-QL0" secondAttribute="centerY" id="jxK-4n-ppQ"/>
                             <constraint firstItem="xQk-2i-Xoh" firstAttribute="leading" secondItem="RJh-Iy-COK" secondAttribute="leading" constant="16" id="kl4-P8-oEL"/>
@@ -88,6 +106,8 @@
                         <viewLayoutGuide key="safeArea" id="RJh-Iy-COK"/>
                     </view>
                     <connections>
+                        <outlet property="backToHome" destination="OFj-Bi-hxa" id="8yp-bQ-YGh"/>
+                        <outlet property="barkButton" destination="Kv5-uU-hxc" id="tqZ-nT-01t"/>
                         <outlet property="comeButton" destination="kwR-tK-uH6" id="B3h-mF-14d"/>
                         <outlet property="downButton" destination="xQk-2i-Xoh" id="R1T-Zm-fWx"/>
                         <outlet property="drinkButton" destination="FlJ-OU-AUY" id="m4U-cK-dDF"/>
@@ -102,11 +122,13 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Assis" width="30" height="30"/>
-        <image name="AuPied" width="30" height="30"/>
-        <image name="Coucher" width="30" height="29"/>
-        <image name="drink" width="30" height="28"/>
-        <image name="feed" width="30" height="30"/>
-        <image name="voice" width="30" height="30"/>
+        <image name="Assis" width="40" height="40"/>
+        <image name="AuPied" width="40" height="40"/>
+        <image name="Coucher" width="40" height="39"/>
+        <image name="bark" width="40" height="40"/>
+        <image name="drink" width="40" height="37"/>
+        <image name="feed" width="40" height="40"/>
+        <image name="home" width="40" height="40"/>
+        <image name="voice" width="40" height="40"/>
     </resources>
 </document>
