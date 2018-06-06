@@ -707,6 +707,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     func treat(_ sentence: String){
         if feed {
+            stopAnimation(key: "eat")
+            playAnimation(key: "waitStandUp", infinity: true)
             if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
                 if bowleat.name == "DogBowl" {
                     bowleat.removeFromParentNode()
@@ -715,6 +717,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feed = false
         }
         if drink {
+            stopAnimation(key: "drink")
+            playAnimation(key: "waitStandUp", infinity: true)
             if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
                 if bowldrink.name == "DogBowl" {
                     bowldrink.removeFromParentNode()
@@ -748,6 +752,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             }
             playAnimation(key: "drink", infinity: true)
             break
+        case "Bon chien":
+            self.comeButton.isHidden = false
+            self.sitButton.isHidden = false
+            self.downButton.isHidden = false
+            self.feedButton.isHidden = false
+            self.drinkButton.isHidden = false
+            playAnimation(key: "waitStandUp", infinity: true)
+            break;
         default:
             break
         }
