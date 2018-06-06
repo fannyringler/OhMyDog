@@ -46,5 +46,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Effectuer une reconnaissance vocale</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Effectuer une reconnaissance vocale</string>
 </dict>
 </plist>
