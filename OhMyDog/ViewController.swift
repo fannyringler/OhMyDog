@@ -655,7 +655,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             recognitionRequest.endAudio()
 //            try! self.audioEngine.start()
 //            self.recordButton.setTitle("Stop recording", for: [])
-            self.recordButton.setTitle("", for: [])
+            self.recordButton.setTitle("Donner un ordre", for: [])
             if let result = result {
                 isFinal = result.isFinal
             }
@@ -693,7 +693,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
-            recordButton.setTitle("", for: .normal)
+            recordButton.setTitle("Donner un ordre", for: .normal)
             comeButton.isHidden = false
             sitButton.isHidden = false
             downButton.isHidden = false
@@ -701,7 +701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feedButton.isHidden = false
         } else {
             try! startRecording()
-            recordButton.setTitle("Stop recording", for: [])
+            recordButton.setTitle("Arrêt", for: [])
         }
     }
     
@@ -752,15 +752,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             }
             playAnimation(key: "drink", infinity: true)
             break
-        case "Bon chien":
+        case "Aboie":
+            playAnimation(key: "waitStandUp", infinity: true)
+            playAnimation(key: "wouf", infinity: false)
+            break
+        default:
             self.comeButton.isHidden = false
             self.sitButton.isHidden = false
             self.downButton.isHidden = false
             self.feedButton.isHidden = false
             self.drinkButton.isHidden = false
             playAnimation(key: "waitStandUp", infinity: true)
-            break;
-        default:
             break
         }
     }
