@@ -399,33 +399,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     @objc func move(){
+        let step: Float = 0.001
         //move step by step
         if walk && destination != nil && dog != nil {
             var indexX = dog.position.x
-            var smallerX = destination.x < dogPosition.x
+            let smallerX = destination.x < dogPosition.x
             if smallerX {
                 if destination.x < indexX {
-                    indexX -= 0.02
+                    indexX -= step
                 }
             } else {
                 if destination.x > indexX {
-                    indexX += 0.02
+                    indexX += step
                 }
             }
             var indexZ = dog.position.z
-            var smallerZ = destination.z < dogPosition.z
+            let smallerZ = destination.z < dogPosition.z
             if smallerZ {
                 if destination.z < indexZ {
-                    indexZ -= 0.02
+                    indexZ -= step
                 }
             } else {
                 if destination.z > indexZ {
-                    indexZ += 0.02
+                    indexZ += step
                 }
             }
             dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
             //if dog is on destination
-            if (smallerZ  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
+            if (smallerX  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
                 if (smallerZ  && destination.z > dog.position.z) || (!smallerZ  && destination.z < dog.position.z){
                     walk = false
                     dogPosition = dog.position
@@ -471,7 +472,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             recordButton.isHidden = true
             recordButton.setTitle("", for: .normal)
             drinkButton.isHidden = true
-            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
             dogPosition = dog.position
@@ -593,14 +594,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 drinkButton.isHidden = false
                 playAnimation(key: "waitStandUp", infinity: true)
             }
-            /*
-            if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                
-                if bowleat.name == "DogBowl" {
-                    bowleat.removeFromParentNode()
-                }
-            }*/
-            
         }
     }
     
