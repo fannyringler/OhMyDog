@@ -92,6 +92,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
         
         //initialize dogHere and Hide button
+        dog = nil
         dogHere = false
         recordButton.isHidden = true
         backToHome.isHidden = true
@@ -249,7 +250,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if dog == nil  {
-            dog = node
+            self.dog = node
         }
         if !anchor.isKind(of: ARPlaneAnchor.self) {
             DispatchQueue.main.async {
@@ -260,6 +261,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 self.dogPosition = SCNVector3Make(anchor.transform.columns.3.x,anchor.transform.columns.3.y,anchor.transform.columns.3.z)
             }
         }
+        
+
     }
     
     func updateFocusSquare() {
@@ -452,6 +455,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     @IBAction func come(_ sender: Any) {
         if !walk && dog != nil {
+            dogPosition = dog.position
             guard let pointOfView = sceneView.pointOfView else { return }
             let transform = pointOfView.transform
             let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
