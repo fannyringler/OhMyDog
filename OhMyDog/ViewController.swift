@@ -559,19 +559,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             let eat = SCNScene(named: "art.scnassets/shibaEat2.dae")!
             if let bowleat = eat.rootNode.childNodes.first?.childNodes.first {
                 dog.childNodes.first?.addChildNode(bowleat)
+                feed = true
+                feedButton.setTitle("Stop", for: .normal)
+                playAnimation(key: "eat", infinity: true)
+                comeButton.isHidden = true
+                barkButton.isHidden = true
+                sitButton.isHidden = true
+                audioEngine.stop()
+                recognitionRequest?.endAudio()
+                recordButton.isHidden = true
+                recordButton.setTitle("", for: .normal)
+                downButton.isHidden = true
+                drinkButton.isHidden = true
             }
-            feed = true
-            feedButton.setTitle("Stop", for: .normal)
-            playAnimation(key: "eat", infinity: true)
-            comeButton.isHidden = true
-            barkButton.isHidden = true
-            sitButton.isHidden = true
-            audioEngine.stop()
-            recognitionRequest?.endAudio()
-            recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
-            downButton.isHidden = true
-            drinkButton.isHidden = true
+            
         } else {
             //delete dog bowl
             if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
@@ -597,16 +598,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             let animation = SCNScene(named: "art.scnassets/shibaDrink2.dae")!
             if let bowldrink = animation.rootNode.childNodes.first?.childNodes.first {
                 dog.childNodes.first?.addChildNode(bowldrink)
+                drink = true
+                drinkButton.setTitle("Stop", for: .normal)
+                playAnimation(key: "drink", infinity: true)
+                comeButton.isHidden = true
+                sitButton.isHidden = true
+                barkButton.isHidden = true
+                downButton.isHidden = true
+                feedButton.isHidden = true
+                recordButton.isHidden = true
             }
-            drink = true
-            drinkButton.setTitle("Stop", for: .normal)
-            playAnimation(key: "drink", infinity: true)
-            comeButton.isHidden = true
-            sitButton.isHidden = true
-            barkButton.isHidden = true
-            downButton.isHidden = true
-            feedButton.isHidden = true
-            recordButton.isHidden = true
         } else {
             if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
                 if bowldrink.name == "DogBowl" {
