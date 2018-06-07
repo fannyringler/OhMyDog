@@ -405,32 +405,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             var indexX = dog.position.x
             let smallerX = destination.x < dogPosition.x
             if smallerX {
-                if destination.x < indexX {
+                if destination.x <= indexX {
                     indexX -= step
                 }
             } else {
-                if destination.x > indexX {
+                if destination.x >= indexX {
                     indexX += step
                 }
             }
             var indexZ = dog.position.z
             let smallerZ = destination.z < dogPosition.z
             if smallerZ {
-                if destination.z < indexZ {
+                if destination.z <= indexZ {
                     indexZ -= step
                 }
             } else {
-                if destination.z > indexZ {
+                if destination.z >= indexZ {
                     indexZ += step
                 }
             }
             dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
             //if dog is on destination
-            if (smallerX  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
-                if (smallerZ  && destination.z > dog.position.z) || (!smallerZ  && destination.z < dog.position.z){
+            if (smallerX  && destination.x >= dog.position.x) || (!smallerX  && destination.x <= dog.position.x){
+                if (smallerZ  && destination.z >= dog.position.z) || (!smallerZ  && destination.z <= dog.position.z){
                     walk = false
-                    dogPosition = dog.position
+                    dog.position.x = destination.x
+                    dog.position.z = destination.z
+//                    dogPosition = dog.position
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+                    dogPosition = destination
                     stopAnimation(key: "walk")
                     playAnimation(key: "waitStandUp", infinity: true)
                     comeButton.setTitle("Au pied", for: .normal)
@@ -454,11 +457,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
             let location = SCNVector3(transform.m41, transform.m42, transform.m43)
             destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
-            let distanceDestToCam = calculateDistance(from: destination, to: positionOfCamera)
-            let distanceFromToCam = calculateDistance(from: dogPosition, to: positionOfCamera)
-            let distanceDestToFrom = calculateDistance(from: destination, to: dog.position)
-            let angle = acos((distanceFromToCam * distanceFromToCam + distanceDestToFrom * distanceDestToFrom - distanceDestToCam * distanceDestToCam) / (2 * distanceFromToCam * distanceDestToFrom)) //* 180 / Float.pi
-            dog.eulerAngles.y -= angle
+//            let distanceDestToCam = calculateDistance(from: destination, to: positionOfCamera)
+//            let distanceFromToCam = calculateDistance(from: dogPosition, to: positionOfCamera)
+//            let distanceDestToFrom = calculateDistance(from: destination, to: dog.position)
+//            let angle = acos((distanceFromToCam * distanceFromToCam + distanceDestToFrom * distanceDestToFrom - distanceDestToCam * distanceDestToCam) / (2 * distanceFromToCam * distanceDestToFrom)) //* 180 / Float.pi
+//            dog.eulerAngles.y -= angle
+            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             walk = true
             playAnimation(key: "walk", infinity: true)
             comeButton.setTitle("Stop", for: .normal)
