@@ -24,7 +24,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     var sceneLight : SCNLight!
     var modelScene = SCNScene()
     var dogPosition : SCNVector3!
-    var dogHere = false
     var dog:SCNNode!
     var animations = [String: CAAnimation]()
     var walk = false
@@ -93,7 +92,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         
         //initialize dogHere and Hide button
         dog = nil
-        dogHere = false
         recordButton.isHidden = true
         backToHome.isHidden = true
         comeButton.isHidden = true
@@ -177,7 +175,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             sceneView.hitTest(location, options: hitTestOptions)
         let hitResultsFeaturePoints: [ARHitTestResult] =
             sceneView.hitTest(screenCenter, types: .featurePoint)
-        if !dogHere {
+        if dog == nil {
             //add AR dog
             if let hit = hitResultsFeaturePoints.first {
                 // Get a transformation matrix with the euler angle of the camera
@@ -201,7 +199,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
                 let location = SCNVector3(transform.m41, transform.m42, transform.m43)
                 positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
-                dogHere = true
                 //make button visible and initialize their title
                 backToHome.isHidden = false
                 barkButton.isHidden = false
@@ -238,7 +235,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
             sceneLight.intensity = estimate.ambientIntensity
         }
-        if dogHere {
+        if dog != nil {
             self.focusSquare.hide()
         } else {
             //show focus square
@@ -249,10 +246,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if dog == nil  {
-            self.dog = node
-        }
+        
         if !anchor.isKind(of: ARPlaneAnchor.self) {
+            if dog == nil  {
+                self.dog = node
+            }
             DispatchQueue.main.async {
                 let modelClone = self.nodeModel.clone()
                 modelClone.position = SCNVector3Zero
@@ -261,8 +259,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 self.dogPosition = SCNVector3Make(anchor.transform.columns.3.x,anchor.transform.columns.3.y,anchor.transform.columns.3.z)
             }
         }
-        
-
     }
     
     func updateFocusSquare() {
@@ -584,7 +580,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             
         } else {
             //delete dog bowl
-            print(sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes)
             if let childNodes = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes {
                 for child in childNodes{
                     if child.name == "DogBowl" {
@@ -801,7 +796,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         if dog != nil{
             dog.removeFromParentNode()
             backToHome.isHidden = true
-            dogHere = false
             dog = nil
             comeButton.isHidden = true
             sitButton.isHidden = true
