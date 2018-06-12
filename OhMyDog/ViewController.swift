@@ -234,27 +234,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         }
         if dog != nil {
             self.focusSquare.hide()
-            SFSpeechRecognizer.requestAuthorization { authStatus in
-                /*
-                 The callback may not be called on the main thread. Add an
-                 operation to the main queue to update the record button's state.
-                 */
-                OperationQueue.main.addOperation {
-                    switch authStatus {
-                    case .authorized:
-                        self.recordButton.isHidden = false
-                        
-                    case .denied:
-                        self.recordButton.isHidden = true
-                        
-                    case .restricted:
-                        self.recordButton.isHidden = true
-                        
-                    case .notDetermined:
-                        self.recordButton.isHidden = true
-                    }
-                }
-            }
         } else {
             //show focus square
             DispatchQueue.main.async {
@@ -418,7 +397,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     @objc func move(){
         let step: Float = 0.001
         //move step by step
+        
         if walk && destination != nil && dog != nil {
+           print(dog.position)
             var indexX = dog.position.x
             let smallerX = destination.x < dogPosition.x
             if smallerX {
@@ -448,7 +429,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                     walk = false
                     dog.position.x = destination.x
                     dog.position.z = destination.z
-//                    dogPosition = dog.position
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
                     dogPosition = destination
                     stopAnimation(key: "walk")
@@ -469,6 +449,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     @IBAction func come(_ sender: Any) {
         if !walk && dog != nil {
+            print("marche")
             dogPosition = dog.position
             guard let pointOfView = sceneView.pointOfView else { return }
             let transform = pointOfView.transform
@@ -484,10 +465,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             downButton.isHidden = true
             barkButton.isHidden = true
             feedButton.isHidden = true
-            audioEngine.stop()
-            recognitionRequest?.endAudio()
             recordButton.isHidden = true
-            
             drinkButton.isHidden = true
             timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
@@ -503,6 +481,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             stopAnimation(key: "walk")
             playAnimation(key: "waitStandUp", infinity: true)
             comeButton.setTitle("Au pied", for: .normal)
+            timer.invalidate()
         }
     }
     
@@ -693,7 +672,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 self.recognitionRequest = nil
                 self.recognitionTask = nil
                 
-                self.recordButton.isHidden = false
+                self.recordButton.isHidden = true
             }
         }
         
@@ -701,15 +680,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         
         try audioEngine.start()
     }
-    
-    public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        if available {
-            recordButton.isHidden = false
-        } else {
-            recordButton.isHidden = true
-        }
-    }
-    
     
     @IBAction func recordButtonTapped() {
         if audioEngine.isRunning {
@@ -806,11 +776,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feedButton.isHidden = true
             barkButton.isHidden = true
             drinkButton.isHidden = true
-            recordButton.isHidden = true
+            recordButton.setTitle("Donner un ordre", for: .normal)
+            audioEngine.inputNode.removeTap(onBus: 0)
             audioEngine.stop()
-            recognitionRequest?.endAudio()
+            recognitionTask?.cancel()
             recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
+            if walk {
+                timer.invalidate()
+            }
             walk = false
             sit = false
             down = false
