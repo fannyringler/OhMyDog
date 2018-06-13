@@ -24,7 +24,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     var sceneLight : SCNLight!
     var modelScene = SCNScene()
     var dogPosition : SCNVector3!
-    var dogHere = false
     var dog:SCNNode!
     var animations = [String: CAAnimation]()
     var walk = false
@@ -80,10 +79,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         // Set the scene to the view
         sceneView.scene = scene
         
-        //create the array with all animations
+        // Create the array with all animations
         loadAnimations()
         
-        //get light
+        // Get light
         sceneLight = SCNLight()
         sceneLight.type = .omni
         
@@ -91,8 +90,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         lightNode.light = sceneLight
         lightNode.position = SCNVector3(x: 0, y: 10, z: 2)
         
-        //initialize dogHere and Hide button
-        dogHere = false
+        // Initialize dogHere and Hide button
+        dog = nil
         recordButton.isHidden = true
         backToHome.isHidden = true
         comeButton.isHidden = true
@@ -169,15 +168,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let location = touches.first!.location(in: sceneView)
         var hitTestOptions = [SCNHitTestOption: Any]()
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
-        let hitResults: [SCNHitTestResult]  =
-            sceneView.hitTest(location, options: hitTestOptions)
         let hitResultsFeaturePoints: [ARHitTestResult] =
             sceneView.hitTest(screenCenter, types: .featurePoint)
-        if !dogHere {
-            //add AR dog
+        if dog == nil {
+            // Add AR dog
             if let hit = hitResultsFeaturePoints.first {
                 // Get a transformation matrix with the euler angle of the camera
                 let rotate = simd_float4x4(SCNMatrix4MakeRotation(sceneView.session.currentFrame!.camera.eulerAngles.y, 0, 1, 0))
@@ -200,8 +196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
                 let location = SCNVector3(transform.m41, transform.m42, transform.m43)
                 positionOfCamera = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
-                dogHere = true
-                //make button visible and initialize their title
+                // Make button visible and initialize their title
                 backToHome.isHidden = false
                 barkButton.isHidden = false
                 barkButton.setTitle("Aboie", for: .normal)
@@ -233,14 +228,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-       //get the light intensity and change the luminosty of AR objects
+       // Get the light intensity and change the luminosty of AR objects
         if let estimate = self.sceneView.session.currentFrame?.lightEstimate {
             sceneLight.intensity = estimate.ambientIntensity
         }
-        if dogHere {
+        if dog != nil {
             self.focusSquare.hide()
         } else {
-            //show focus square
+            // Show focus square
             DispatchQueue.main.async {
                 self.updateFocusSquare()
             }
@@ -248,10 +243,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if dog == nil  {
-            dog = node
-        }
+        
         if !anchor.isKind(of: ARPlaneAnchor.self) {
+            if dog == nil  {
+                self.dog = node
+            }
             DispatchQueue.main.async {
                 let modelClone = self.nodeModel.clone()
                 modelClone.position = SCNVector3Zero
@@ -399,37 +395,45 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     @objc func move(){
-        //move step by step
-        if walk && destination != nil && dog != nil {
+        let step: Float = 0.002
+        // Move step by step
+        
+        if walk && dog != nil {
+            guard let pointOfView = sceneView.pointOfView else { return }
+            let transform = pointOfView.transform
+            let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+            destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
             var indexX = dog.position.x
-            var smallerX = destination.x < dogPosition.x
+            let smallerX = destination.x < dogPosition.x
             if smallerX {
-                if destination.x < indexX {
-                    indexX -= 0.02
+                if destination.x <= indexX {
+                    indexX -= step
                 }
             } else {
-                if destination.x > indexX {
-                    indexX += 0.02
+                if destination.x >= indexX {
+                    indexX += step
                 }
             }
             var indexZ = dog.position.z
-            var smallerZ = destination.z < dogPosition.z
+            let smallerZ = destination.z < dogPosition.z
             if smallerZ {
-                if destination.z < indexZ {
-                    indexZ -= 0.02
+                if destination.z <= indexZ {
+                    indexZ -= step
                 }
             } else {
-                if destination.z > indexZ {
-                    indexZ += 0.02
+                if destination.z >= indexZ {
+                    indexZ += step
                 }
             }
             dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
-            //if dog is on destination
-            if (smallerZ  && destination.x > dog.position.x) || (!smallerX  && destination.x < dog.position.x){
-                if (smallerZ  && destination.z > dog.position.z) || (!smallerZ  && destination.z < dog.position.z){
+            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+            // If dog is on destination
+            if (smallerX  && destination.x >= dog.position.x) || (!smallerX  && destination.x <= dog.position.x){
+                if (smallerZ  && destination.z >= dog.position.z) || (!smallerZ  && destination.z <= dog.position.z){
                     walk = false
-                    dogPosition = dog.position
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
+                    dogPosition = destination
                     stopAnimation(key: "walk")
                     playAnimation(key: "waitStandUp", infinity: true)
                     comeButton.setTitle("Au pied", for: .normal)
@@ -448,34 +452,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     @IBAction func come(_ sender: Any) {
         if !walk && dog != nil {
-            guard let pointOfView = sceneView.pointOfView else { return }
-            let transform = pointOfView.transform
-            let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
-            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
-            destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
-            let distanceDestToCam = calculateDistance(from: destination, to: positionOfCamera)
-            let distanceFromToCam = calculateDistance(from: dogPosition, to: positionOfCamera)
-            let distanceDestToFrom = calculateDistance(from: destination, to: dog.position)
-            let angle = acos((distanceFromToCam * distanceFromToCam + distanceDestToFrom * distanceDestToFrom - distanceDestToCam * distanceDestToCam) / (2 * distanceFromToCam * distanceDestToFrom)) //* 180 / Float.pi
-            dog.eulerAngles.y -= angle
+            dogPosition = dog.position
+            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             walk = true
             playAnimation(key: "walk", infinity: true)
             comeButton.setTitle("Stop", for: .normal)
-            //other button are hidden
+            // Other button are hidden
             sitButton.isHidden = true
             downButton.isHidden = true
             barkButton.isHidden = true
             feedButton.isHidden = true
-            audioEngine.stop()
-            recognitionRequest?.endAudio()
             recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
             drinkButton.isHidden = true
-            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.move), userInfo: nil, repeats: true)
         } else {
             walk = false
             dogPosition = dog.position
-            //make other button visible
+            // Make other button visible
             sitButton.isHidden = false
             downButton.isHidden = false
             feedButton.isHidden = false
@@ -485,6 +478,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             stopAnimation(key: "walk")
             playAnimation(key: "waitStandUp", infinity: true)
             comeButton.setTitle("Au pied", for: .normal)
+            timer.invalidate()
         }
     }
     
@@ -500,7 +494,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
             feedButton.isHidden = true
             drinkButton.isHidden = true
         } else {
@@ -531,7 +524,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             audioEngine.stop()
             recognitionRequest?.endAudio()
             recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
             feedButton.isHidden = true
             barkButton.isHidden = true
             drinkButton.isHidden = true
@@ -555,40 +547,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     @IBAction func feed(_ sender: Any) {
         if !feed && dog != nil {
-            //add dog bowl
+            // Add dog bowl
+            
             let eat = SCNScene(named: "art.scnassets/shibaEat2.dae")!
             if let bowleat = eat.rootNode.childNodes.first?.childNodes.first {
                 dog.childNodes.first?.addChildNode(bowleat)
+                feed = true
+                feedButton.setTitle("Stop", for: .normal)
+                playAnimation(key: "eat", infinity: true)
+                comeButton.isHidden = true
+                barkButton.isHidden = true
+                sitButton.isHidden = true
+                audioEngine.stop()
+                recognitionRequest?.endAudio()
+                recordButton.isHidden = true
+                downButton.isHidden = true
+                drinkButton.isHidden = true
             }
-            feed = true
-            feedButton.setTitle("Stop", for: .normal)
-            playAnimation(key: "eat", infinity: true)
-            comeButton.isHidden = true
-            barkButton.isHidden = true
-            sitButton.isHidden = true
-            audioEngine.stop()
-            recognitionRequest?.endAudio()
-            recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
-            downButton.isHidden = true
-            drinkButton.isHidden = true
+            
         } else {
-            //delete dog bowl
-            if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                if bowleat.name == "DogBowl" {
-                    bowleat.removeFromParentNode()
-                }
+            
+            // Delete dog bowl
+            if let dogBowl = sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true) {
+                dogBowl.removeFromParentNode()
+                feed = false
+                feedButton.setTitle("Mange", for: .normal)
+                stopAnimation(key: "eat")
+                comeButton.isHidden = false
+                barkButton.isHidden = false
+                sitButton.isHidden = false
+                downButton.isHidden = false
+                recordButton.isHidden = false
+                drinkButton.isHidden = false
+                playAnimation(key: "waitStandUp", infinity: true)
             }
-            feed = false
-            feedButton.setTitle("Mange", for: .normal)
-            stopAnimation(key: "eat")
-            comeButton.isHidden = false
-            barkButton.isHidden = false
-            sitButton.isHidden = false
-            downButton.isHidden = false
-            recordButton.isHidden = false
-            drinkButton.isHidden = false
-            playAnimation(key: "waitStandUp", infinity: true)
         }
     }
     
@@ -597,32 +589,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             let animation = SCNScene(named: "art.scnassets/shibaDrink2.dae")!
             if let bowldrink = animation.rootNode.childNodes.first?.childNodes.first {
                 dog.childNodes.first?.addChildNode(bowldrink)
+                drink = true
+                drinkButton.setTitle("Stop", for: .normal)
+                playAnimation(key: "drink", infinity: true)
+                comeButton.isHidden = true
+                sitButton.isHidden = true
+                barkButton.isHidden = true
+                downButton.isHidden = true
+                feedButton.isHidden = true
+                recordButton.isHidden = true
             }
-            drink = true
-            drinkButton.setTitle("Stop", for: .normal)
-            playAnimation(key: "drink", infinity: true)
-            comeButton.isHidden = true
-            sitButton.isHidden = true
-            barkButton.isHidden = true
-            downButton.isHidden = true
-            feedButton.isHidden = true
-            recordButton.isHidden = true
         } else {
-            if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                if bowldrink.name == "DogBowl" {
-                    bowldrink.removeFromParentNode()
-                }
+            if let dogBowl = sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true) {
+                dogBowl.removeFromParentNode()
+                drink = false
+                drinkButton.setTitle("Bois", for: .normal)
+                stopAnimation(key: "drink")
+                comeButton.isHidden = false
+                sitButton.isHidden = false
+                downButton.isHidden = false
+                barkButton.isHidden = false
+                recordButton.isHidden = false
+                feedButton.isHidden = false
+                playAnimation(key: "waitStandUp", infinity: true)
             }
-            drink = false
-            drinkButton.setTitle("Bois", for: .normal)
-            stopAnimation(key: "drink")
-            comeButton.isHidden = false
-            sitButton.isHidden = false
-            downButton.isHidden = false
-            barkButton.isHidden = false
-            recordButton.isHidden = false
-            feedButton.isHidden = false
-            playAnimation(key: "waitStandUp", infinity: true)
         }
     }
     
@@ -649,7 +639,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        
         let inputNode = audioEngine.inputNode
         guard let recognitionRequest = recognitionRequest else { fatalError("Unable to created a SFSpeechAudioBufferRecognitionRequest object") }
         
@@ -660,17 +649,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         // We keep a reference to the task so that it can be cancelled.
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { result, error in
             var isFinal = false
-            var sentence = result?.bestTranscription.formattedString
+            let sentence = result?.bestTranscription.formattedString
             if sentence != nil {
                 self.treat(sentence!)
             }
-            self.audioEngine.stop()
-            recognitionRequest.endAudio()
+            
             self.recordButton.setTitle("Donner un ordre", for: [])
             if let result = result {
                 isFinal = result.isFinal
             }
-            
+            self.audioEngine.stop()
+            recognitionRequest.endAudio()
             if error != nil || isFinal {
                 self.audioEngine.stop()
                 inputNode.removeTap(onBus: 0)
@@ -678,13 +667,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 self.recognitionRequest = nil
                 self.recognitionTask = nil
                 
-                self.recordButton.isHidden = false
+                self.recordButton.isHidden = true
             }
-        }
-        
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
-            self.recognitionRequest?.append(buffer)
         }
         
         audioEngine.prepare()
@@ -692,18 +676,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         try audioEngine.start()
     }
     
-    public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        if available {
-            recordButton.isHidden = false
-        } else {
-            recordButton.isHidden = true
-        }
-    }
-    
     @IBAction func recordButtonTapped() {
         if audioEngine.isRunning {
-            audioEngine.stop()
             recognitionRequest?.endAudio()
+            audioEngine.stop()
+            audioEngine.inputNode.removeTap(onBus: 0)
+            recognitionTask?.cancel()
             recordButton.setTitle("Donner un ordre", for: .normal)
             comeButton.isHidden = false
             sitButton.isHidden = false
@@ -712,30 +690,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             drinkButton.isHidden = false
             feedButton.isHidden = false
         } else {
+            let recordingFormat = audioEngine.inputNode.outputFormat(forBus: 0)
+            audioEngine.inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+                self.recognitionRequest?.append(buffer)
+            }
             try! startRecording()
             recordButton.setTitle("Arrêt", for: [])
         }
     }
     
     func treat(_ sentence: String){
-        //delete dog bowl if present
+        // Delete dog bowl if present
         if feed {
             stopAnimation(key: "eat")
             playAnimation(key: "waitStandUp", infinity: true)
-            if let bowleat = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                if bowleat.name == "DogBowl" {
-                    bowleat.removeFromParentNode()
-                }
+            while sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true) != nil {
+                sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true)?.removeFromParentNode()
             }
             feed = false
         }
         if drink {
             stopAnimation(key: "drink")
             playAnimation(key: "waitStandUp", infinity: true)
-            if let bowldrink = sceneView.scene.rootNode.childNodes.last?.childNodes.first?.childNodes.last {
-                if bowldrink.name == "DogBowl" {
-                    bowldrink.removeFromParentNode()
-                }
+            while sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true) != nil {
+                sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true)?.removeFromParentNode()
             }
             drink = false
         }
@@ -786,7 +764,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         if dog != nil{
             dog.removeFromParentNode()
             backToHome.isHidden = true
-            dogHere = false
             dog = nil
             comeButton.isHidden = true
             sitButton.isHidden = true
@@ -794,21 +771,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feedButton.isHidden = true
             barkButton.isHidden = true
             drinkButton.isHidden = true
-            recordButton.isHidden = true
+            recordButton.setTitle("Donner un ordre", for: .normal)
+            audioEngine.inputNode.removeTap(onBus: 0)
             audioEngine.stop()
-            recognitionRequest?.endAudio()
+            recognitionTask?.cancel()
             recordButton.isHidden = true
-            recordButton.setTitle("", for: .normal)
+            if walk {
+                timer.invalidate()
+            }
             walk = false
             sit = false
             down = false
             feed = false
             drink = false
         }
-        for child in (sceneView.scene.rootNode.childNodes.last?.childNodes)! {
-            if(child.name == "Armature"){
-                child.removeFromParentNode()
-            }
+        while sceneView.scene.rootNode.childNode(withName: "Armature", recursively: true) != nil {
+            sceneView.scene.rootNode.childNode(withName: "Armature", recursively: true)?.removeFromParentNode()
         }
     }
 }
