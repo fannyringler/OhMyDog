@@ -790,10 +790,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             feed = false
             drink = false
         }
-        for child in (sceneView.scene.rootNode.childNodes.last?.childNodes)! {
-            if(child.name == "Armature"){
-                child.removeFromParentNode()
-            }
+        while sceneView.scene.rootNode.childNode(withName: "Armature", recursively: true) != nil {
+            sceneView.scene.rootNode.childNode(withName: "Armature", recursively: true)?.removeFromParentNode()
         }
     }
 }
