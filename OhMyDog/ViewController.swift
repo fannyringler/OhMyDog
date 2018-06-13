@@ -395,11 +395,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     }
     
     @objc func move(){
-        let step: Float = 0.001
+        let step: Float = 0.002
         //move step by step
         
-        if walk && destination != nil && dog != nil {
-           print(dog.position)
+        if walk && dog != nil {
+            guard let pointOfView = sceneView.pointOfView else { return }
+            let transform = pointOfView.transform
+            let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+            destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
             var indexX = dog.position.x
             let smallerX = destination.x < dogPosition.x
             if smallerX {
@@ -423,12 +427,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 }
             }
             dog.position = SCNVector3Make(indexX, dog.position.y, indexZ)
+            dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             //if dog is on destination
             if (smallerX  && destination.x >= dog.position.x) || (!smallerX  && destination.x <= dog.position.x){
                 if (smallerZ  && destination.z >= dog.position.z) || (!smallerZ  && destination.z <= dog.position.z){
                     walk = false
-                    dog.position.x = destination.x
-                    dog.position.z = destination.z
+//                    dog.position.x = destination.x
+//                    dog.position.z = destination.z
                     dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
                     dogPosition = destination
                     stopAnimation(key: "walk")
@@ -449,13 +454,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     
     @IBAction func come(_ sender: Any) {
         if !walk && dog != nil {
-            print("marche")
             dogPosition = dog.position
-            guard let pointOfView = sceneView.pointOfView else { return }
-            let transform = pointOfView.transform
-            let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
-            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
-            destination = SCNVector3(orientation.x + location.x, orientation.y + location.y, orientation.z + location.z)
             dog.eulerAngles.y = sceneView.session.currentFrame!.camera.eulerAngles.y
             walk = true
             playAnimation(key: "walk", infinity: true)
@@ -571,7 +570,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
         } else {
             
             //delete dog bowl
-            print()
             if let dogBowl = sceneView.scene.rootNode.childNode(withName: "DogBowl", recursively: true) {
                 dogBowl.removeFromParentNode()
                 feed = false
