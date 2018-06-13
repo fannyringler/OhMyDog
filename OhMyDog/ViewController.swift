@@ -46,6 +46,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
     @IBOutlet weak var comeButton: UIButton!
     @IBOutlet weak var backToHome: UIButton!
     @IBOutlet weak var barkButton: UIButton!
+    @IBOutlet weak var message: UILabel!
     
     var session: ARSession {
         return sceneView.session
@@ -264,6 +265,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
             let result = self.smartHitTest(screenCenter) {
             DispatchQueue.main.async {
                 self.focusSquare.unhide()
+                self.message.isHidden = true
                 self.sceneView.scene.rootNode.addChildNode(self.focusSquare)
                 self.focusSquare.state = .detecting(hitTestResult: result, camera: camera)
             }
@@ -272,6 +274,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SFSpeechRecognizerDel
                 self.focusSquare.state = .initializing
                 self.sceneView.pointOfView?.addChildNode(self.focusSquare)
                 self.focusSquare.hide()
+                self.message.isHidden = false
+                self.message.text = "Attendez l'apparition du carré pour placer votre chien"
             }
         }
     }
