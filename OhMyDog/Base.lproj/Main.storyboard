@@ -61,7 +61,7 @@
                                 <rect key="frame" x="167" y="607" width="40" height="40"/>
                                 <state key="normal" image="voice"/>
                                 <connections>
-                                    <action selector="recordButtonTapped" destination="BV1-FR-VrT" eventType="touchUpInside" id="7hd-3M-idH"/>
+                                    <action selector="recordButtonTapped" destination="BV1-FR-VrT" eventType="touchUpInside" id="jpT-wm-2MU"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFj-Bi-hxa">
@@ -112,7 +112,7 @@
                         <outlet property="downButton" destination="xQk-2i-Xoh" id="R1T-Zm-fWx"/>
                         <outlet property="drinkButton" destination="FlJ-OU-AUY" id="m4U-cK-dDF"/>
                         <outlet property="feedButton" destination="O1m-20-969" id="qiE-Es-XHI"/>
-                        <outlet property="recordButton" destination="mOa-RU-Edk" id="tsJ-uL-cV2"/>
+                        <outlet property="recordButton" destination="mOa-RU-Edk" id="pJy-9u-zdB"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
                         <outlet property="sitButton" destination="tKp-U4-QL0" id="tWJ-wK-QSz"/>
                     </connections>
